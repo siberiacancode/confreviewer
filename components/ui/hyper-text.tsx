@@ -1,28 +1,31 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { AnimatePresence, motion, MotionProps } from 'motion/react';
+import type { MotionProps } from 'motion/react';
+
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 type CharacterSet = string[] | readonly string[];
 
 interface HyperTextProps extends MotionProps {
+  /** Whether to trigger animation on hover */
+  animateOnHover?: boolean;
+  /** Component to render as - defaults to div */
+  as?: React.ElementType;
+  /** Custom character set for scramble effect. Defaults to uppercase alphabet */
+  characterSet?: CharacterSet;
   /** The text content to be animated */
   children: string;
   /** Optional className for styling */
   className?: string;
-  /** Duration of the animation in milliseconds */
-  duration?: number;
   /** Delay before animation starts in milliseconds */
   delay?: number;
-  /** Component to render as - defaults to div */
-  as?: React.ElementType;
+  /** Duration of the animation in milliseconds */
+  duration?: number;
   /** Whether to start animation when element comes into view */
   startOnView?: boolean;
-  /** Whether to trigger animation on hover */
-  animateOnHover?: boolean;
-  /** Custom character set for scramble effect. Defaults to uppercase alphabet */
-  characterSet?: CharacterSet;
 }
 
 const DEFAULT_CHARACTER_SET = Object.freeze(

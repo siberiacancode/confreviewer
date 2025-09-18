@@ -1,17 +1,6 @@
 import type { ConferenceType } from "@/app/(constants)";
-import { parseJugru } from "./parsers/jugru";
 
-export interface TalkData {
-  title: string;
-  speaker: string;
-  speakerAvatar?: string;
-  company?: string;
-  description: string;
-  time?: string;
-  venue?: string;
-  tags?: string[];
-  logo?: string;
-}
+import { parseJugru } from "./parsers/jugru";
 
 const PARSERS = {
   jugru: parseJugru,
@@ -21,4 +10,4 @@ const PARSERS = {
 export const parseConferenceData = async (
   type: ConferenceType,
   html: string
-): Promise<TalkData> => PARSERS[type](html);
+): Promise<any> => PARSERS[type](html);

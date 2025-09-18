@@ -1,12 +1,12 @@
 import { ImageResponse } from "@vercel/og";
-import path from "path";
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 
 export interface OpengraphData {
-  title: string;
-  speaker: string;
   company?: string;
+  speaker: string;
   speakerAvatar?: string;
+  title: string;
 }
 
 // Функция для определения оптимального размера шрифта
@@ -52,14 +52,14 @@ export const generateOpengraphImage = async (
       let startIndex = 0;
 
       // Первая строка
-      let firstLineWords = wordsPerLine + (remainder > 0 ? 1 : 0);
+      const firstLineWords = wordsPerLine + (remainder > 0 ? 1 : 0);
       lines.push(
         words.slice(startIndex, startIndex + firstLineWords).join(" ")
       );
       startIndex += firstLineWords;
 
       // Вторая строка
-      let secondLineWords = wordsPerLine + (remainder > 1 ? 1 : 0);
+      const secondLineWords = wordsPerLine + (remainder > 1 ? 1 : 0);
       lines.push(
         words.slice(startIndex, startIndex + secondLineWords).join(" ")
       );
@@ -135,15 +135,15 @@ export const generateOpengraphImage = async (
             {/* Avatar */}
             {data.speakerAvatar ? (
               <img
-                src={data.speakerAvatar}
-                width="128" // Увеличено пропорционально
-                height="128" // Увеличено пропорционально
                 style={{
                   borderRadius: "50%",
                   objectFit: "cover",
                   border: "5px solid white", // Увеличено
                 }}
                 alt="Speaker avatar"
+                height="128" // Увеличено пропорционально
+                src={data.speakerAvatar}
+                width="128" // Увеличено пропорционально
               />
             ) : (
               <div

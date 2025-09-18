@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
-import { Button, ShineBorder } from "@/components/ui";
-
 import { ArrowUpIcon, Loader2Icon } from "lucide-react";
+import { useActionState } from "react";
+
+import { Button, ShineBorder } from "@/components/ui";
 
 import { analyzeConference } from "./actions";
 
@@ -20,23 +20,23 @@ const Home = ({}: HomeProps) => {
     <div>
       <div className="mx-auto max-w-3xl space-y-12 text-center">
         <div className="relative mx-auto max-w-lg">
-          <form action={analyzeConferenceAction} className="space-y-4">
+          <form className="space-y-4" action={analyzeConferenceAction}>
             <div className="bg-secondary/70 relative flex gap-2 rounded-3xl px-3 py-2 shadow-xl shadow-white/10">
               <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
 
               <input
-                type="url"
-                name="url"
                 className="w-full border-none bg-transparent px-2 py-1 outline-none placeholder:text-neutral-400"
-                placeholder="Paste link to talk"
                 disabled={isPending}
+                name="url"
+                type="url"
+                placeholder="Paste link to talk"
               />
 
               <Button
-                type="submit"
-                size="icon"
                 className="rounded-full"
                 disabled={isPending}
+                size="icon"
+                type="submit"
               >
                 {isPending ? (
                   <Loader2Icon className="size-4 animate-spin" />

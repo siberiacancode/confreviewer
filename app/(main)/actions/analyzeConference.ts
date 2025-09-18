@@ -1,8 +1,9 @@
 "use server";
 
-import { CONFERENCE_NAME } from "@/app/(constants)";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+
+import { CONFERENCE_NAME } from "@/app/(constants)";
 
 const conferenceUrlSchema = z.object({
   url: z
@@ -14,8 +15,8 @@ const conferenceUrlSchema = z.object({
 });
 
 export interface AnalyzeConferenceResult {
-  success: boolean;
   error?: string;
+  success: boolean;
 }
 
 export const analyzeConference = async (

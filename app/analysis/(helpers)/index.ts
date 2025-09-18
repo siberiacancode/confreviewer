@@ -1,2 +1,2 @@
-export * from "./parseConferenceData";
 export * from "./getConferenceType";
+export * from "./parseConferenceData";

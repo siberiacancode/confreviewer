@@ -1,8 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui";
 import { useCopy } from "@siberiacancode/reactuse";
-import { Copy, Check } from "lucide-react";
+import { Check, Copy } from "lucide-react";
+
+import { Button } from "@/components/ui";
 
 interface CopyButtonProps {
   talk: any;
@@ -17,7 +18,7 @@ export const CopyButton = ({ talk }: CopyButtonProps) => {
     );
 
   return (
-    <Button variant="secondary" onClick={onClick} className="flex-shrink-0">
+    <Button className="flex-shrink-0" variant="secondary" onClick={onClick}>
       {copied ? (
         <>
           <Check className="size-4" />

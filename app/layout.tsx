@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
 
-import "./globals.css";
 import { Provider } from "./provider";
+
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +26,7 @@ interface RootLayoutProps {
 }
 
 const RootLayout = ({ children }: RootLayoutProps) => (
-  <html lang="en" className="text-[20px]">
+  <html className="text-[20px]" lang="en">
     <head>
       <script
         dangerouslySetInnerHTML={{

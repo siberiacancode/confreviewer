@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui";
 import { LoaderIcon } from "lucide-react";
 import Link from "next/link";
+
+import { Button } from "@/components/ui";
+
 import { SearchInput, ThemeButton } from "./(components)";
 
 interface AnalysisLayoutProps {
@@ -22,11 +24,11 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-2">
-          <Button asChild variant="ghost" size="sm" className="text-sm">
+          <Button asChild className="text-sm" size="sm" variant="ghost">
             <a
-              target="_blank"
-              rel="noopener noreferrer"
               href="https://github.com/siberiacancode"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Community
             </a>

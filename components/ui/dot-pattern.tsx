@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import React, { memo, useEffect, useId, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 /**
  *  DotPattern Component Props
@@ -18,16 +19,16 @@ import React, { memo, useEffect, useId, useRef, useState } from "react";
  * @param {boolean} [glow=false] - Whether dots should have a glowing animation effect
  */
 interface DotPatternProps extends React.SVGProps<SVGSVGElement> {
-  width?: number;
-  height?: number;
-  x?: number;
-  y?: number;
+  [key: string]: unknown;
+  className?: string;
+  cr?: number;
   cx?: number;
   cy?: number;
-  cr?: number;
-  className?: string;
   glow?: boolean;
-  [key: string]: unknown;
+  height?: number;
+  width?: number;
+  x?: number;
+  y?: number;
 }
 
 /**
@@ -112,11 +113,11 @@ const DotPattern = memo(
     return (
       <svg
         ref={containerRef}
-        aria-hidden="true"
         className={cn(
           "pointer-events-none absolute inset-0 h-full w-full",
           className
         )}
+        aria-hidden="true"
         {...props}
       >
         <defs>
@@ -128,12 +129,6 @@ const DotPattern = memo(
         {dots.map((dot, index) => (
           <motion.circle
             key={`${dot.x}-${dot.y}`}
-            cx={dot.x}
-            cy={dot.y}
-            r={cr}
-            fill={glow ? `url(#${id}-gradient)` : "currentColor"}
-            className="text-neutral-400/80"
-            initial={glow ? { opacity: 0.4, scale: 1 } : {}}
             animate={
               glow
                 ? {
@@ -142,6 +137,12 @@ const DotPattern = memo(
                   }
                 : {}
             }
+            className="text-neutral-400/80"
+            cx={dot.x}
+            cy={dot.y}
+            fill={glow ? `url(#${id}-gradient)` : "currentColor"}
+            initial={glow ? { opacity: 0.4, scale: 1 } : {}}
+            r={cr}
             transition={
               glow
                 ? {

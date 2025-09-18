@@ -1,12 +1,12 @@
+import { ExternalLinkIcon } from "lucide-react";
 import { notFound } from "next/navigation";
-
-import { getConferenceType, parseConferenceData } from "./(helpers)";
-import { CopyButton } from "./(components)";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
+
 import { Button } from "@/components/ui";
-import { ExternalLinkIcon } from "lucide-react";
+
+import { CopyButton } from "./(components)";
+import { getConferenceType, parseConferenceData } from "./(helpers)";
 
 interface AnalysisPageProps {
   searchParams: Promise<{ url: string }>;
@@ -33,8 +33,8 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
 
             <div className="flex gap-2 justify-between">
               <CopyButton talk={result} />
-              <Button asChild variant="secondary" size="icon">
-                <a href={url} target="_blank" rel="noopener noreferrer">
+              <Button asChild size="icon" variant="secondary">
+                <a href={url} rel="noopener noreferrer" target="_blank">
                   <ExternalLinkIcon className="size-4" />
                 </a>
               </Button>
@@ -42,10 +42,7 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
           </div>
 
           <div className="prose prose-sm dark:prose-invert max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeRaw]}
-            >
+            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
               {result.description}
             </ReactMarkdown>
           </div>
@@ -53,9 +50,9 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
           <div className="flex justify-between gap-4 items-center">
             <div className="bg-card text-card-foreground flex gap-4 rounded-xl border p-2 shadow-sm">
               <img
-                src={result.speakerAvatar}
                 alt={`${result.speaker} avatar`}
                 className="size-10 rounded-full object-cover"
+                src={result.speakerAvatar}
               />
 
               <div className="flex flex-col">
@@ -65,9 +62,9 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
             </div>
 
             <img
-              src={result.logo}
               alt={`${result.title} logo`}
               className="h-10 object-cover"
+              src={result.logo}
             />
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, CSSProperties } from 'react';
+import type { ComponentPropsWithoutRef, CSSProperties } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -13,11 +13,6 @@ const AnimatedShinyText = ({
   ...props
 }: AnimatedShinyTextProps) => (
   <span
-    style={
-      {
-        '--shiny-width': `${shimmerWidth}px`
-      } as CSSProperties
-    }
     className={cn(
       'mx-auto max-w-md text-neutral-600/70 dark:text-neutral-400/70',
 
@@ -29,6 +24,11 @@ const AnimatedShinyText = ({
 
       className
     )}
+    style={
+      {
+        '--shiny-width': `${shimmerWidth}px`
+      } as CSSProperties
+    }
     {...props}
   >
     {children}
