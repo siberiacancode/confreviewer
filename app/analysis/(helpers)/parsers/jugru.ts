@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 
-export const parseJugru = async (html: string) => {
+export const parseJugru = async (url: string, html: string) => {
   const dom = new JSDOM(html);
   const doc = dom.window.document;
 
@@ -27,5 +27,6 @@ export const parseJugru = async (html: string) => {
     company,
     description,
     logo,
+    url,
   };
 };
