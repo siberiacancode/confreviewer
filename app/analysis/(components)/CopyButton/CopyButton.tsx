@@ -14,7 +14,7 @@ export const CopyButton = ({ talk }: CopyButtonProps) => {
 
   const onClick = () =>
     copy(
-      `**${talk.title} - ${talk.speaker}**\n\n${talk.link}\n\n${talk.description}\n`
+      `**${talk.title} - ${talk.speaker}**\n\n${talk.url}\n\n${talk.description}\n`
     );
 
   return (

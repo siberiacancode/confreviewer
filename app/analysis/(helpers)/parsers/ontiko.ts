@@ -38,7 +38,7 @@ export const parseOntiko = async (url: string, html: string) => {
         "data:image/svg+xml;utf8," + encodeURIComponent(logoElement.outerHTML);
     }
 
-    if (logoElement && logoElement.tagName === "img") {
+    if (logoElement && logoElement.tagName === "IMG") {
       logo = `${new URL(url).origin}${logoElement.getAttribute("src")}`;
     }
   }
