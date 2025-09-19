@@ -22,7 +22,10 @@ const Home = ({}: HomeProps) => {
         <div className="relative mx-auto max-w-lg">
           <form className="space-y-4" action={analyzeConferenceAction}>
             <div className="bg-secondary/70 relative flex gap-2 rounded-3xl px-3 py-2 shadow-xl shadow-white/10">
-              <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
+              <ShineBorder
+                borderWidth={3}
+                shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
+              />
 
               <input
                 className="w-full border-none bg-transparent px-2 py-1 outline-none placeholder:text-neutral-400"

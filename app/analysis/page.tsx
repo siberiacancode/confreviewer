@@ -21,14 +21,15 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
 
   const result = await parseConferenceData(
     conferenceType,
-    await conferenceData.text()
+    await conferenceData.text(),
+    url
   );
 
   return (
     <div>
       <div className="flex gap-2">
         <div className="flex flex-col items-start justify-between gap-4">
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between w-full gap-2">
             <h1 className="text-3xl font-medium">{result.title}</h1>
 
             <div className="flex gap-2 justify-between">
@@ -57,7 +58,7 @@ const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {
 
               <div className="flex flex-col">
                 <span className="font-medium text-sm">{result.speaker}</span>
-                {result.company && <p className="text-xs">{result.company}</p>}
+                <p className="text-xs">{result.company ?? "unknown"}</p>
               </div>
             </div>
 

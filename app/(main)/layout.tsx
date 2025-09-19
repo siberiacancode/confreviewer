@@ -49,6 +49,20 @@ const MainLayout = ({ children }: MainLayoutProps) => (
 
         {children}
       </div>
+
+      <div className="mt-5 text-xs text-gray-600 dark:text-gray-400">
+        <span>
+          made by{" "}
+          <a
+            href="https://github.com/siberiacancode"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            siberiacancode
+          </a>
+        </span>
+      </div>
     </div>
   </div>
 );

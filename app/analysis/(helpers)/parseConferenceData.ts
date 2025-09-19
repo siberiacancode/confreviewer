@@ -1,13 +1,14 @@
 import type { ConferenceType } from "@/app/(constants)";
 
-import { parseJugru } from "./parsers/jugru";
+import { parseJugru, parseOntiko } from "./parsers";
 
 const PARSERS = {
   jugru: parseJugru,
-  onteko: parseJugru,
-} satisfies Record<ConferenceType, typeof parseJugru>;
+  onteko: parseOntiko,
+} satisfies Record<ConferenceType, typeof parseJugru | typeof parseOntiko>;
 
 export const parseConferenceData = async (
   type: ConferenceType,
-  html: string
-): Promise<any> => PARSERS[type](html);
+  html: string,
+  url: string
+): Promise<any> => PARSERS[type](url, html);
