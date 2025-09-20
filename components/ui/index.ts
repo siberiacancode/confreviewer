@@ -6,3 +6,4 @@ export * from "./hyper-text";
 export * from "./input";
 export * from "./shine-border";
 export * from "./skeleton";
+export * from "./dropdown-menu";

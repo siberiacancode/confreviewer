@@ -7,8 +7,8 @@ const AnalysisLoading = () => (
         <div className="flex justify-between w-full">
           <Skeleton className="h-15 w-2/3" />
           <div className="flex gap-2 justify-between">
-            <Skeleton className="h-8 w-16" />
-            <Skeleton className="size-8" />
+            <Skeleton className="h-9 w-32" />
+            <Skeleton className="size-9" />
           </div>
         </div>
 

@@ -1,9 +1,15 @@
 "use client";
 
 import { useCopy } from "@siberiacancode/reactuse";
-import { Check, Copy } from "lucide-react";
+import { CheckIcon, CopyIcon, ChevronDownIcon } from "lucide-react";
 
-import { Button } from "@/components/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui";
 
 interface CopyButtonProps {
   talk: any;
@@ -12,24 +18,52 @@ interface CopyButtonProps {
 export const CopyButton = ({ talk }: CopyButtonProps) => {
   const { copied, copy } = useCopy();
 
-  const onClick = () =>
+  const onCopyClick = () =>
     copy(
       `**${talk.title} - ${talk.speaker}**\n\n${talk.url}\n\n${talk.description}\n`
     );
 
+  const onGetOgImage = () => window.open(`/api/og?url=${talk.url}`, "_blank");
+
   return (
-    <Button className="flex-shrink-0" variant="secondary" onClick={onClick}>
-      {copied ? (
-        <>
-          <Check className="size-4" />
-          Copied
-        </>
-      ) : (
-        <>
-          <Copy className="size-4" />
-          Copy
-        </>
-      )}
-    </Button>
+    <div className="inline-flex w-fit rounded-md shadow-xs">
+      <Button
+        variant="secondary"
+        className="rounded-none rounded-s-md shadow-none focus-visible:z-10 cursor-pointer"
+        onClick={onCopyClick}
+      >
+        {copied ? (
+          <>
+            <CheckIcon className="size-4" />
+            Copied
+          </>
+        ) : (
+          <>
+            <CopyIcon className="size-4" />
+            Copy
+          </>
+        )}
+      </Button>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="rounded-none rounded-e-md shadow-none focus-visible:z-10"
+          >
+            <a href="#" target="_blank" rel="noopener noreferrer">
+              <ChevronDownIcon />
+              <span className="sr-only">External link</span>
+            </a>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={onGetOgImage}>
+            Get og image
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

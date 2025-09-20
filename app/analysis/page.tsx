@@ -1,5 +1,6 @@
 import { ExternalLinkIcon } from "lucide-react";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 
@@ -10,6 +11,65 @@ import { getConferenceType, parseConferenceData } from "./(helpers)";
 
 interface AnalysisPageProps {
   searchParams: Promise<{ url: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: AnalysisPageProps): Promise<Metadata> {
+  const { url } = await searchParams;
+
+  if (!url) {
+    return {
+      title: "Conference Analysis",
+      description: "Analyze conference talks and presentations",
+    };
+  }
+
+  try {
+    const conferenceData = await fetch(decodeURIComponent(url));
+    const conferenceType = getConferenceType(url);
+
+    const result = await parseConferenceData(
+      conferenceType,
+      await conferenceData.text(),
+      url
+    );
+
+    const title = result.title || "Conference Talk";
+    const description = `Analysis of "${title}" by ${
+      result.speaker || "Unknown Speaker"
+    }`;
+    const ogImageUrl = `/api/og?url=${encodeURIComponent(url)}`;
+
+    return {
+      title: `${title} - ConfReviewer`,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [ogImageUrl],
+      },
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Conference Analysis - ConfReviewer",
+      description: "Analyze conference talks and presentations",
+    };
+  }
 }
 
 const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {

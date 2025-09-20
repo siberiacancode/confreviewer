@@ -13,12 +13,12 @@ export const parseJugru = async (url: string, html: string) => {
   const avatarElement = doc.querySelector('img[class*="avatar__image"]');
   const logoElement = doc.querySelector('img[class*="footer__logo"]');
 
-  const title = titleElement?.textContent?.trim();
-  const description = descriptionElement?.innerHTML;
-  const speaker = speakerElement?.textContent?.trim();
-  const company = companyElement?.textContent?.trim();
-  const speakerAvatar = avatarElement?.getAttribute("src");
-  const logo = logoElement?.getAttribute("src");
+  const title = titleElement!.textContent!.trim();
+  const description = descriptionElement!.innerHTML;
+  const speaker = speakerElement!.textContent!.trim();
+  const company = companyElement!.textContent!.trim();
+  const speakerAvatar = avatarElement!.getAttribute("src");
+  const logo = logoElement!.getAttribute("src");
 
   return {
     title,

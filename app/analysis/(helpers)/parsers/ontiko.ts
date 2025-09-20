@@ -12,10 +12,10 @@ export const parseOntiko = async (url: string, html: string) => {
   const companyElement = doc.querySelector(".thesis__author-company");
   const avatarElement = doc.querySelector(".thesis__author-img");
 
-  const title = titleElement?.textContent?.trim();
-  const description = descriptionElement?.innerHTML.trim();
-  const speaker = speakerElement?.textContent?.trim();
-  const company = companyElement?.textContent?.trim();
+  const title = titleElement!.textContent!.trim();
+  const description = descriptionElement!.innerHTML.trim();
+  const speaker = speakerElement!.textContent!.trim();
+  const company = companyElement!.textContent!.trim();
 
   let speakerAvatar;
   if (avatarElement) {
