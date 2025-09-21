@@ -28,7 +28,6 @@ const loadGoogleFont = async (font: string, text: string) => {
   throw new Error("failed to load font data");
 };
 
-// Функция для разбивки текста на строки
 const splitTextIntoLines = (text: string, maxLines: number = 3): string[] => {
   const words = text.split(" ");
   const lines: string[] = [];
@@ -58,6 +57,7 @@ const getFontSize = (lines: string[]): number => {
 export const GET = async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const url = searchParams.get("url");
+  const theme = searchParams.get("theme") ?? "dark";
 
   if (!url) {
     return new Response("URL parameter is required", { status: 400 });
@@ -90,15 +90,24 @@ export const GET = async (request: NextRequest) => {
           width: "100%",
           display: "flex",
           position: "relative",
-          backgroundImage,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
         }}
       >
         <div
           style={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            backgroundImage,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: theme === "dark" ? "none" : "invert(1)",
+          }}
+        />
+
+        <div
+          style={{
             position: "absolute",
-            top: "150px",
+            top: "170px",
             padding: "0 130px",
             width: "100%",
             display: "flex",
@@ -108,7 +117,7 @@ export const GET = async (request: NextRequest) => {
             style={{
               fontSize,
               fontWeight: "700",
-              color: "white",
+              color: theme === "dark" ? "white" : "black",
               lineHeight: 1.2,
             }}
           >
@@ -121,7 +130,7 @@ export const GET = async (request: NextRequest) => {
             position: "absolute",
             padding: "0 130px",
             display: "flex",
-            bottom: "80px",
+            bottom: "40px",
             justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
@@ -134,19 +143,18 @@ export const GET = async (request: NextRequest) => {
               gap: "20px",
             }}
           >
-            {result.speakerAvatar && (
-              <img
-                src={result.speakerAvatar}
-                alt="Speaker"
-                style={{
-                  height: "90px",
-                  width: "90px",
-                  border: "2px solid white",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-            )}
+            <img
+              src={result.speakerAvatar}
+              alt="Speaker"
+              style={{
+                height: "100px",
+                width: "100px",
+                border: `3px solid ${theme === "dark" ? "white" : "black"}`,
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+
             <div
               style={{
                 display: "flex",
@@ -155,9 +163,9 @@ export const GET = async (request: NextRequest) => {
             >
               <div
                 style={{
-                  fontSize: 40,
+                  fontSize: 45,
                   fontWeight: "600",
-                  color: "white",
+                  color: theme === "dark" ? "white" : "black",
                 }}
               >
                 {result.speaker}
@@ -165,8 +173,8 @@ export const GET = async (request: NextRequest) => {
               {result.company && (
                 <div
                   style={{
-                    fontSize: 30,
-                    color: "white",
+                    fontSize: 35,
+                    color: theme === "dark" ? "white" : "black",
                     opacity: 0.8,
                   }}
                 >
@@ -181,7 +189,7 @@ export const GET = async (request: NextRequest) => {
               src={result.logo}
               alt="Conference logo"
               style={{
-                height: "90px",
+                height: "100px",
                 objectFit: "contain",
               }}
             />

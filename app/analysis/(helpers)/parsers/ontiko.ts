@@ -29,7 +29,10 @@ export const parseOntiko = async (url: string, html: string) => {
   }
 
   let logo;
-  const logoContainerElement = doc.querySelector('[class*="header__logo"]');
+  const logoContainerElement = doc.querySelector(
+    '[class*="header__logo"], [class*="nav__logo"]'
+  );
+
   if (logoContainerElement) {
     const logoElement = logoContainerElement.firstElementChild;
 

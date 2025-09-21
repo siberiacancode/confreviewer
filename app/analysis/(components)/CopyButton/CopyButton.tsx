@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui";
 
+import { htmlToMarkdown } from "../../(actions)";
+
 interface CopyButtonProps {
   talk: any;
 }
@@ -18,10 +20,12 @@ interface CopyButtonProps {
 export const CopyButton = ({ talk }: CopyButtonProps) => {
   const { copied, copy } = useCopy();
 
-  const onCopyClick = () =>
+  const onCopyClick = async () => {
+    const description = await htmlToMarkdown(talk.description);
     copy(
-      `**${talk.title} - ${talk.speaker}**\n\n${talk.url}\n\n${talk.description}\n`
+      `**${talk.title} - ${talk.speaker}**\n\n${talk.url}\n\n${description}\n`
     );
+  };
 
   const onGetOgImage = () => window.open(`/api/og?url=${talk.url}`, "_blank");
 
