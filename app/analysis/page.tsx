@@ -25,51 +25,41 @@ export async function generateMetadata({
     };
   }
 
-  try {
-    const conferenceData = await fetch(decodeURIComponent(url));
-    const conferenceType = getConferenceType(url);
+  const conferenceData = await fetch(decodeURIComponent(url));
+  const conferenceType = getConferenceType(url);
 
-    const result = await parseConferenceData(
-      conferenceType,
-      await conferenceData.text(),
-      url
-    );
+  const result = await parseConferenceData(
+    conferenceType,
+    await conferenceData.text(),
+    url
+  );
 
-    const title = result.title || "Conference Talk";
-    const description = `Analysis of "${title}" by ${
-      result.speaker || "Unknown Speaker"
-    }`;
-    const ogImageUrl = `/api/og?url=${encodeURIComponent(url)}`;
+  const title = result.title;
+  const description = result.description;
+  const ogImageUrl = `/api/og?url=${encodeURIComponent(url)}`;
 
-    return {
-      title: `${title} - ConfReviewer`,
+  return {
+    title: `${title} - ConfReviewer`,
+    description,
+    openGraph: {
+      title,
       description,
-      openGraph: {
-        title,
-        description,
-        images: [
-          {
-            url: ogImageUrl,
-            width: 1200,
-            height: 630,
-            alt: title,
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: [ogImageUrl],
-      },
-    };
-  } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: "Conference Analysis - ConfReviewer",
-      description: "Analyze conference talks and presentations",
-    };
-  }
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1920,
+          height: 1061,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
 }
 
 const AnalysisPage = async ({ searchParams }: AnalysisPageProps) => {

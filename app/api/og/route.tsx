@@ -50,9 +50,9 @@ const splitTextIntoLines = (text: string, maxLines: number = 3): string[] => {
 };
 
 const getFontSize = (lines: string[]): number => {
-  if (lines.length === 1) return 2;
-  if (lines.length === 2) return 60;
-  return 48;
+  if (lines.length === 1) return 130;
+  if (lines.length === 2) return 100;
+  return 70;
 };
 
 export const GET = async (request: NextRequest) => {
@@ -93,106 +93,99 @@ export const GET = async (request: NextRequest) => {
           backgroundImage,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          fontFamily: "Geist",
         }}
       >
-        {result.logo && (
-          <img
-            src={result.logo}
-            alt="Conference logo"
-            style={{
-              height: "32px",
-              maxWidth: "120px",
-              objectFit: "contain",
-            }}
-          />
-        )}
-
         <div
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            top: "150px",
+            padding: "0 130px",
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
           }}
         >
-          {titleLines.map((line, index) => (
-            <div
-              key={index}
-              style={{
-                fontSize: fontSize,
-                fontWeight: "700",
-                color: "white",
-                lineHeight: 1.2,
-                textShadow: "0 4px 12px rgba(0,0,0,0.5)",
-                marginBottom: index < titleLines.length - 1 ? "16px" : "0px",
-              }}
-            >
-              {line}
-            </div>
-          ))}
+          <div
+            style={{
+              fontSize,
+              fontWeight: "700",
+              color: "white",
+              lineHeight: 1.2,
+            }}
+          >
+            {result.title}
+          </div>
         </div>
 
         <div
           style={{
             position: "absolute",
-            bottom: "30px",
-            left: "30px",
+            padding: "0 130px",
             display: "flex",
+            bottom: "80px",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "20px",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            padding: "16px 20px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+            width: "100%",
           }}
         >
-          {result.speakerAvatar && (
-            <img
-              src={result.speakerAvatar}
-              alt="Speaker"
-              width={60}
-              height={60}
-              style={{
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-          )}
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
-              gap: "2px",
+              alignItems: "center",
+              gap: "20px",
             }}
           >
+            {result.speakerAvatar && (
+              <img
+                src={result.speakerAvatar}
+                alt="Speaker"
+                style={{
+                  height: "90px",
+                  width: "90px",
+                  border: "2px solid white",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
             <div
               style={{
-                fontSize: 24,
-                fontWeight: "600",
-                color: "#1f2937",
-                lineHeight: 1.2,
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              {result.speaker}
-            </div>
-            {result.company && (
               <div
                 style={{
-                  fontSize: 18,
-                  color: "#6b7280",
-                  lineHeight: 1.2,
+                  fontSize: 40,
+                  fontWeight: "600",
+                  color: "white",
                 }}
               >
-                {result.company}
+                {result.speaker}
               </div>
-            )}
+              {result.company && (
+                <div
+                  style={{
+                    fontSize: 30,
+                    color: "white",
+                    opacity: 0.8,
+                  }}
+                >
+                  {result.company ?? "unknown"}
+                </div>
+              )}
+            </div>
           </div>
+
+          {result.logo && (
+            <img
+              src={result.logo}
+              alt="Conference logo"
+              style={{
+                height: "90px",
+                objectFit: "contain",
+              }}
+            />
+          )}
         </div>
       </div>
     ),
