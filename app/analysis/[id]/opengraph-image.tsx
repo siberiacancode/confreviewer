@@ -1,13 +1,14 @@
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
-import {
-  getConferenceType,
-  parseConferenceData,
-} from "@/app/analysis/(helpers)";
+import { prisma } from "@/lib/prisma";
 import fs from "fs";
 import path from "path";
 
-export const runtime = "nodejs";
+export const alt = "Conference Talk Analysis";
+export const size = {
+  width: 1200,
+  height: 630,
+};
+export const contentType = "image/png";
 
 const loadGoogleFont = async (font: string, text: string) => {
   const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(
@@ -54,29 +55,19 @@ const getFontSize = (lines: string[]): number => {
   return 70;
 };
 
-export const GET = async (request: NextRequest) => {
-  const { searchParams } = new URL(request.url);
-  const url = searchParams.get("url");
-  const theme = searchParams.get("theme") ?? "dark";
+export default async function Image({ params }: { params: { id: string } }) {
+  const talk = await prisma.talk.findUnique({
+    where: { id: params.id },
+  });
 
-  if (!url) {
-    return new Response("URL parameter is required", { status: 400 });
+  if (!talk) {
+    return new Response("Talk not found", { status: 404 });
   }
 
-  const conferenceData = await fetch(decodeURIComponent(url));
-  const conferenceType = getConferenceType(url);
-
-  const result = await parseConferenceData(
-    conferenceType,
-    await conferenceData.text(),
-    url
-  );
-
-  const titleLines = splitTextIntoLines(result.title);
+  const titleLines = splitTextIntoLines(talk.title);
   const fontSize = getFontSize(titleLines);
 
   const templatePath = path.join(process.cwd(), "public", "template.png");
-
   const imageBuffer = fs.readFileSync(templatePath);
   const backgroundImage = `url(data:image/png;base64,${imageBuffer.toString(
     "base64"
@@ -100,9 +91,33 @@ export const GET = async (request: NextRequest) => {
             backgroundImage,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            filter: theme === "dark" ? "none" : "invert(1)",
+            filter: "none",
           }}
         />
+
+        {/* {talk.logo && (
+          <div
+            style={{
+              display: "flex",
+              position: "absolute",
+              padding: "0 130px",
+              top: "30px",
+              objectFit: "contain",
+              width: "100%",
+              justifyContent: "flex-end",
+            }}
+          >
+            <img
+              src={talk.logo}
+              alt="Conference logo"
+              style={{
+                height: "100px",
+                maxWidth: "150px",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+        )} */}
 
         <div
           style={{
@@ -117,11 +132,11 @@ export const GET = async (request: NextRequest) => {
             style={{
               fontSize,
               fontWeight: "700",
-              color: theme === "dark" ? "white" : "black",
+              color: "white",
               lineHeight: 1.2,
             }}
           >
-            {result.title}
+            {talk.title}
           </div>
         </div>
 
@@ -144,12 +159,12 @@ export const GET = async (request: NextRequest) => {
             }}
           >
             <img
-              src={result.speakerAvatar}
+              src={talk.speakerAvatar!}
               alt="Speaker"
               style={{
                 height: "100px",
                 width: "100px",
-                border: `3px solid ${theme === "dark" ? "white" : "black"}`,
+                border: "3px solid white",
                 borderRadius: "50%",
                 objectFit: "cover",
               }}
@@ -165,51 +180,39 @@ export const GET = async (request: NextRequest) => {
                 style={{
                   fontSize: 45,
                   fontWeight: "600",
-                  color: theme === "dark" ? "white" : "black",
+                  color: "white",
                 }}
               >
-                {result.speaker}
+                {talk.speaker}
               </div>
-              {result.company && (
+              {talk.company && (
                 <div
                   style={{
                     fontSize: 35,
-                    color: theme === "dark" ? "white" : "black",
+                    color: "white",
                     opacity: 0.8,
                   }}
                 >
-                  {result.company ?? "unknown"}
+                  {talk.company}
                 </div>
               )}
             </div>
           </div>
-
-          {result.logo && (
-            <img
-              src={result.logo}
-              alt="Conference logo"
-              style={{
-                height: "100px",
-                objectFit: "contain",
-              }}
-            />
-          )}
         </div>
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      ...size,
       fonts: [
         {
           name: "Geist",
           data: await loadGoogleFont(
             "Geist",
-            result.title + result.speaker + result.company
+            talk.title + talk.speaker + (talk.company || "")
           ),
           style: "normal",
         },
       ],
     }
   );
-};
+}

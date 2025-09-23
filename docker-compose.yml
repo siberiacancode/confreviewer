@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    container_name: confreviewer-postgres
+    environment:
+      POSTGRES_DB: confreviewer
+      POSTGRES_USER: confreviewer
+      POSTGRES_PASSWORD: confreviewer_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:

@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { CONFERENCE_NAME } from "@/app/(constants)";
+import {
+  getConferenceType,
+  parseConferenceData,
+} from "@/app/analysis/(helpers)";
+import { prisma } from "@/lib/prisma";
 
 const conferenceUrlSchema = z.object({
   url: z
@@ -30,9 +35,36 @@ export const analyzeConference = async (
     return { ...state, success: false, error: validatedData.error.message };
   }
 
-  const encodedUrl = encodeURIComponent(validatedData.data.url);
+  const conferenceData = await fetch(url);
+  const conferenceType = getConferenceType(url);
+  const result = await parseConferenceData(
+    conferenceType,
+    await conferenceData.text(),
+    url
+  );
 
-  redirect(`/analysis?url=${encodedUrl}`);
+  const existingTalk = await prisma.talk.findUnique({
+    where: {
+      title_speaker: {
+        title: result.title,
+        speaker: result.speaker,
+      },
+    },
+  });
 
-  return { ...state, success: true };
+  if (existingTalk) redirect(`/analysis/${existingTalk.id}`);
+
+  const newTalk = await prisma.talk.create({
+    data: {
+      title: result.title,
+      speaker: result.speaker,
+      speakerAvatar: result.speakerAvatar,
+      company: result.company,
+      description: result.description,
+      logo: result.logo,
+      url,
+    },
+  });
+
+  redirect(`/analysis/${newTalk.id}`);
 };

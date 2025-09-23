@@ -27,7 +27,8 @@ export const CopyButton = ({ talk }: CopyButtonProps) => {
     );
   };
 
-  const onGetOgImage = () => window.open(`/api/og?url=${talk.url}`, "_blank");
+  const onGetOgImage = () =>
+    window.open(`/analysis/${talk.id}/opengraph-image`, "_blank");
 
   return (
     <div className="inline-flex w-fit rounded-md shadow-xs">
