@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@siberiacancode/reactuse": "^0.2.32",
     "@tailwindcss/typography": "^0.5.18",
+    "@vercel/analytics": "^1.5.0",
     "@vercel/og": "^0.8.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
