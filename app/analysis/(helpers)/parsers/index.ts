@@ -1,2 +1,2 @@
-export { parseJugru } from "./jugru";
-export { parseOntiko } from "./ontiko";
+export { parseJugru } from './jugru';
+export { parseOntiko } from './ontiko';

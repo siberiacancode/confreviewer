@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
-import { ThemeProvider } from "./(contexts)/theme";
+import { ThemeProvider } from './(contexts)/theme';
 
 interface ProviderProps {
   children: React.ReactNode;
 }
 
-export const Provider = ({ children }: ProviderProps) => (
-  <ThemeProvider>{children}</ThemeProvider>
-);
+export const Provider = ({ children }: ProviderProps) => <ThemeProvider>{children}</ThemeProvider>;

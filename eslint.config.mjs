@@ -1,4 +1,4 @@
-import { eslint } from "@siberiacancode/eslint";
+import { eslint } from '@siberiacancode/eslint';
 
 /** @type {import('eslint').Linter.FlatConfig} */
 export default eslint({
@@ -6,5 +6,5 @@ export default eslint({
   javascript: true,
   react: true,
   jsx: true,
-  jsxA11y: true,
+  jsxA11y: true
 });

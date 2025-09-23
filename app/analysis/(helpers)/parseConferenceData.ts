@@ -1,10 +1,10 @@
-import type { ConferenceType } from "@/app/(constants)";
+import type { ConferenceType } from '@/app/(constants)';
 
-import { parseJugru, parseOntiko } from "./parsers";
+import { parseJugru, parseOntiko } from './parsers';
 
 const PARSERS = {
   jugru: parseJugru,
-  onteko: parseOntiko,
+  onteko: parseOntiko
 } satisfies Record<ConferenceType, typeof parseJugru | typeof parseOntiko>;
 
 export const parseConferenceData = async (

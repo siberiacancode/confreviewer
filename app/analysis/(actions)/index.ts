@@ -1,1 +1,1 @@
-export * from "./htmlToMarkdown";
+export * from './htmlToMarkdown';

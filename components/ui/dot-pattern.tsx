@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
-import React, { memo, useEffect, useId, useRef, useState } from "react";
+import { motion } from 'motion/react';
+import React, { memo, useEffect, useId, useRef, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 /**
  *  DotPattern Component Props
@@ -81,22 +81,19 @@ const DotPattern = memo(
     useEffect(() => {
       const updateDimensions = () => {
         if (containerRef.current) {
-          const { width, height } =
-            containerRef.current.getBoundingClientRect();
+          const { width, height } = containerRef.current.getBoundingClientRect();
           setDimensions({ width, height });
         }
       };
 
       updateDimensions();
-      window.addEventListener("resize", updateDimensions);
-      return () => window.removeEventListener("resize", updateDimensions);
+      window.addEventListener('resize', updateDimensions);
+      return () => window.removeEventListener('resize', updateDimensions);
     }, []);
 
     const dots = Array.from(
       {
-        length:
-          Math.ceil(dimensions.width / width) *
-          Math.ceil(dimensions.height / height),
+        length: Math.ceil(dimensions.width / width) * Math.ceil(dimensions.height / height)
       },
       (_, i) => {
         const col = i % Math.ceil(dimensions.width / width);
@@ -105,7 +102,7 @@ const DotPattern = memo(
           x: col * width + cx,
           y: row * height + cy,
           delay: Math.random() * 5,
-          duration: Math.random() * 3 + 2,
+          duration: Math.random() * 3 + 2
         };
       }
     );
@@ -113,17 +110,14 @@ const DotPattern = memo(
     return (
       <svg
         ref={containerRef}
-        className={cn(
-          "pointer-events-none absolute inset-0 h-full w-full",
-          className
-        )}
-        aria-hidden="true"
+        aria-hidden='true'
+        className={cn('pointer-events-none absolute inset-0 h-full w-full', className)}
         {...props}
       >
         <defs>
           <radialGradient id={`${id}-gradient`}>
-            <stop offset="0%" stopColor="currentColor" stopOpacity="1" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            <stop offset='0%' stopColor='currentColor' stopOpacity='1' />
+            <stop offset='100%' stopColor='currentColor' stopOpacity='0' />
           </radialGradient>
         </defs>
         {dots.map((dot, index) => (
@@ -133,14 +127,14 @@ const DotPattern = memo(
               glow
                 ? {
                     opacity: [0.4, 1, 0.4],
-                    scale: [1, 1.5, 1],
+                    scale: [1, 1.5, 1]
                   }
                 : {}
             }
-            className="text-neutral-400/80"
+            className='text-neutral-400/80'
             cx={dot.x}
             cy={dot.y}
-            fill={glow ? `url(#${id}-gradient)` : "currentColor"}
+            fill={glow ? `url(#${id}-gradient)` : 'currentColor'}
             initial={glow ? { opacity: 0.4, scale: 1 } : {}}
             r={cr}
             transition={
@@ -148,9 +142,9 @@ const DotPattern = memo(
                 ? {
                     duration: dot.duration,
                     repeat: Infinity,
-                    repeatType: "reverse",
+                    repeatType: 'reverse',
                     delay: dot.delay,
-                    ease: "easeInOut",
+                    ease: 'easeInOut'
                   }
                 : {}
             }
