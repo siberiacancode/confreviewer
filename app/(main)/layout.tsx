@@ -62,7 +62,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
         </div>
 
         {!!recentTalks.length && (
-          <div className="mt-2 flex flex-col items-center justify-center gap-1">
+          <div className="mt-4 flex flex-col items-center justify-center gap-1">
             {recentTalks.map((talk) => (
               <div
                 key={talk.id}
