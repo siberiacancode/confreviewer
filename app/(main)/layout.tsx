@@ -8,6 +8,8 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
+export const dynamic = "force-dynamic";
+
 const MainLayout = async ({ children }: MainLayoutProps) => {
   const recentTalks = await prisma.talk.findMany({
     take: 3,
