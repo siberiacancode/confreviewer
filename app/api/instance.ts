@@ -1,5 +1,5 @@
-import fetches from "@siberiacancode/fetches";
+import fetches from '@siberiacancode/fetches';
 
 export const api = fetches.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: 'http://localhost:3000/api'
 });

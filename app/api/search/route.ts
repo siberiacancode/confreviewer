@@ -1,50 +1,53 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import type { NextRequest} from 'next/server';
+
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+import { prisma } from '@/lib/prisma';
 
 export interface SearchTalk {
+  company: string;
+  createdAt: Date;
   id: string;
-  title: string;
   speaker: string;
   speakerAvatar: string | null;
-  company: string;
-  url: string;
-  createdAt: Date;
+  title: string;
   updatedAt: Date;
+  url: string;
 }
 
 export interface SearchResponse {
+  count: number;
+  isRecent: boolean;
+  limit: number;
+  query: string;
   success: boolean;
   talks: SearchTalk[];
-  count: number;
-  query: string;
-  limit: number;
-  isRecent: boolean;
 }
 
 const searchSchema = z.object({
-  search: z.string().optional().default(""),
+  search: z.string().optional().default(''),
   limit: z
     .string()
     .transform((val) => {
-      const num = parseInt(val, 10);
+      const num = Number.parseInt(val, 10);
       return isNaN(num) ? 10 : Math.min(Math.max(num, 1), 50); // min 1, max 50, default 10
     })
-    .default(10),
+    .default(10)
 });
 
 export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
     const validation = searchSchema.safeParse({
-      search: searchParams.get("search"),
-      limit: searchParams.get("limit"),
+      search: searchParams.get('search'),
+      limit: searchParams.get('limit')
     });
 
     if (!validation.success) {
       return NextResponse.json(
         {
-          error: "Invalid search parameters",
+          error: 'Invalid search parameters'
         },
         { status: 400 }
       );
@@ -55,7 +58,7 @@ export const GET = async (request: NextRequest) => {
     if (!search.trim()) {
       const talks = await prisma.talk.findMany({
         take: limit,
-        orderBy: { updatedAt: "desc" },
+        orderBy: { updatedAt: 'desc' }
       });
 
       return NextResponse.json({
@@ -63,7 +66,7 @@ export const GET = async (request: NextRequest) => {
         talks,
         count: talks.length,
         query: search,
-        limit,
+        limit
       });
     }
 
@@ -73,39 +76,39 @@ export const GET = async (request: NextRequest) => {
           {
             title: {
               contains: search,
-              mode: "insensitive",
-            },
+              mode: 'insensitive'
+            }
           },
           {
             speaker: {
               contains: search,
-              mode: "insensitive",
-            },
+              mode: 'insensitive'
+            }
           },
           {
             company: {
               contains: search,
-              mode: "insensitive",
-            },
+              mode: 'insensitive'
+            }
           },
           {
             url: {
               contains: search,
-              mode: "insensitive",
-            },
+              mode: 'insensitive'
+            }
           },
           {
             description: {
               contains: search,
-              mode: "insensitive",
-            },
-          },
-        ],
+              mode: 'insensitive'
+            }
+          }
+        ]
       },
       orderBy: {
-        updatedAt: "desc",
+        updatedAt: 'desc'
       },
-      take: limit,
+      take: limit
     });
 
     return NextResponse.json({
@@ -113,13 +116,10 @@ export const GET = async (request: NextRequest) => {
       talks,
       count: talks.length,
       query: search,
-      limit,
+      limit
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 };

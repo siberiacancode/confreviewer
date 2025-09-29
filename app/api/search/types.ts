@@ -1,24 +1,24 @@
 export interface SearchTalk {
+  company: string;
+  createdAt: Date;
   id: string;
-  title: string;
   speaker: string;
   speakerAvatar: string | null;
-  company: string;
-  url: string;
-  createdAt: Date;
+  title: string;
   updatedAt: Date;
+  url: string;
 }
 
 export interface SearchResponse {
-  success: boolean;
-  data: SearchTalk[];
   count: number;
-  query: string;
-  limit: number;
+  data: SearchTalk[];
   isRecent: boolean;
+  limit: number;
+  query: string;
+  success: boolean;
 }
 
 export interface SearchErrorResponse {
-  error: string;
   details?: any;
+  error: string;
 }
