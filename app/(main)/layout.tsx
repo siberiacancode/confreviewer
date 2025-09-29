@@ -11,6 +11,8 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
+export const dynamic = "force-dynamic";
+
 const MainLayout = async ({ children }: MainLayoutProps) => {
   const searchResponse = await api.get<SearchResponse>("/search", {
     query: {
