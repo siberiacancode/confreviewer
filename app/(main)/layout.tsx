@@ -1,8 +1,10 @@
 import Link from "next/link";
 
 import { AnimatedShinyText, DotPattern, HyperText } from "@/components/ui";
-import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
+
+import { SearchResponse } from "../api/search/route";
+import { api } from "../api/instance";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,9 +13,14 @@ interface MainLayoutProps {
 export const revalidate = 10;
 
 const MainLayout = async ({ children }: MainLayoutProps) => {
-  const recentTalks = await prisma.talk.findMany({
-    take: 3,
-    orderBy: { updatedAt: "desc" },
+  const searchResponse = await api.get<SearchResponse>("/search", {
+    query: {
+      limit: 3,
+      search: "",
+    },
+    next: {
+      revalidate: 10,
+    },
   });
 
   return (
@@ -61,9 +68,9 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
           {children}
         </div>
 
-        {!!recentTalks.length && (
+        {!!searchResponse.data.talks.length && (
           <div className="mt-4 flex flex-col items-center justify-center gap-1">
-            {recentTalks.map((talk) => (
+            {searchResponse.data.talks.map((talk) => (
               <div
                 key={talk.id}
                 className="text-xs text-gray-600 dark:text-gray-400"

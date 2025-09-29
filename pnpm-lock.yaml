@@ -17,9 +17,12 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.2.3
         version: 1.2.3(@types/react@19.1.13)(react@19.1.1)
+      '@siberiacancode/fetches':
+        specifier: ^1.11.0
+        version: 1.11.0
       '@siberiacancode/reactuse':
-        specifier: ^0.2.32
-        version: 0.2.32(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^0.2.34
+        version: 0.2.34(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@tailwindcss/typography':
         specifier: ^0.5.18
         version: 0.5.18(tailwindcss@4.1.13)
@@ -895,13 +898,16 @@ packages:
   '@siberiacancode/eslint@2.12.0':
     resolution: {integrity: sha512-ogOWamKE118q5vQuaDzRYevxzVOEN+tOzr7E581ZXQ6/Lnj6AHfs4mjaqA4z3565YWCi6J8JW8phlMycovrlgw==}
 
+  '@siberiacancode/fetches@1.11.0':
+    resolution: {integrity: sha512-8OPHTCG8ZoGvLDhaHAn5Rv8WsXdBT2hMssEGShJIaWflx9GIKZGXKSj4dRq8qGN2A74OBWVzqsW6noTPc8X4ww==}
+
   '@siberiacancode/prettier@1.4.0':
     resolution: {integrity: sha512-zdeOrVt5fGdOuwjpsgVBgJ3NcIAYi7rq2AXlKPTBF8F7PHrRtBfNI2jRY4QXgnRIj2XZFNMwEC+JDN7iCYyBmw==}
     peerDependencies:
       prettier: ^3.6.2
 
-  '@siberiacancode/reactuse@0.2.32':
-    resolution: {integrity: sha512-H6XmKJvrKrH7YT2NlhO1+eZeFJbd1E1XggPqSOHjgJGgAIg7mnDiYMBAmZcxcdFfO02sX54eW1S3GCoVvgcNpA==}
+  '@siberiacancode/reactuse@0.2.34':
+    resolution: {integrity: sha512-8NBQqD4sgwEaa3yN18WwxcYVqwTB4XTuWELkIRKju2JkKHrDFpAb1IfErrUPMXyP+DQJc3N4qtAe0nwbPYhv4w==}
     engines: {node: '>=14'}
     peerDependencies:
       '@types/react': ^18 || ^19
@@ -4496,11 +4502,13 @@ snapshots:
       - typescript
       - vitest
 
+  '@siberiacancode/fetches@1.11.0': {}
+
   '@siberiacancode/prettier@1.4.0(prettier@3.6.2)':
     dependencies:
       prettier: 3.6.2
 
-  '@siberiacancode/reactuse@0.2.32(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@siberiacancode/reactuse@0.2.34(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
