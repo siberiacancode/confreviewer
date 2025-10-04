@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Conference reviewer api",
+    "version": "1.0.0",
+    "description": "This is the OpenAPI specification for the conference reviewer api."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development server"
+    }
+  ],
+  "outputDir": "./public",
+  "paths": {
+    "/search": {
+      "get": {
+        "operationId": "get-search",
+        "summary": "Search for talks",
+        "description": "Searches for talks by title, speaker, company, url, and description",
+        "tags": ["Search"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "search",
+            "schema": {
+              "type": "string",
+              "description": "Search query"
+            },
+            "required": true,
+            "description": "Search query",
+            "example": "example"
+          },
+          {
+            "in": "path",
+            "name": "limit",
+            "schema": {
+              "type": "string",
+              "description": "Limit"
+            },
+            "required": true,
+            "description": "Limit",
+            "example": "example"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchParams": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "description": "Search query"
+          },
+          "limit": {
+            "type": "string",
+            "description": "Limit"
+          }
+        },
+        "required": ["search", "limit"]
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "Count"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limit"
+          },
+          "query": {
+            "type": "string",
+            "description": "Query"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Success"
+          },
+          "talks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "company": {
+                  "type": "string",
+                  "description": "Company"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Created at"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "ID"
+                },
+                "speaker": {
+                  "type": "string",
+                  "description": "Speaker"
+                },
+                "speakerAvatar": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "Speaker avatar"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Updated at"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "URL"
+                }
+              },
+              "required": ["company", "createdAt", "id", "speaker", "title", "updatedAt", "url"]
+            },
+            "description": "Talks"
+          }
+        },
+        "required": ["count", "limit", "query", "success", "talks"]
+      },
+      "SearchError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error"
+          }
+        },
+        "required": ["error"]
+      }
+    },
+    "responses": {}
+  }
+}

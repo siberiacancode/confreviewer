@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui';
 
-
 interface CopyButtonProps {
   talk: any;
 }

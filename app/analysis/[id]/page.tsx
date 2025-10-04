@@ -4,8 +4,10 @@ import { ExternalLinkIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
+import type { TalkResponse } from '@/app/api/talks/[id]/route';
+
+import { api } from '@/app/api/instance';
 import { Button } from '@/components/ui';
-import { prisma } from '@/lib/prisma';
 
 import { CopyButton } from '../(components)';
 
@@ -16,9 +18,9 @@ interface AnalysisPageProps {
 export const generateMetadata = async ({ params }: AnalysisPageProps): Promise<Metadata> => {
   const { id } = await params;
 
-  const talk = (await prisma.talk.findUnique({
-    where: { id }
-  }))!;
+  const talkResponse = await api.get<TalkResponse>(`/talks/${id}`);
+
+  const talk = talkResponse.data.talk;
 
   const title = talk.title;
   const description = talk.description;
@@ -32,9 +34,9 @@ export const generateMetadata = async ({ params }: AnalysisPageProps): Promise<M
 const AnalysisPage = async ({ params }: AnalysisPageProps) => {
   const { id } = await params;
 
-  const talk = await prisma.talk.findUnique({
-    where: { id }
-  });
+  const talkResponse = await api.get<TalkResponse>(`/talks/${id}`);
+
+  const talk = talkResponse.data.talk;
 
   if (!talk) notFound();
 

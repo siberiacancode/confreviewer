@@ -14,9 +14,11 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
     <header>
       <div className='flex h-16 items-center justify-between gap-4'>
         <div className='flex-1'>
-          <Link href='/' className='text-primary hover:text-primary/90'>
-            <LoaderIcon className='size-6' />
-          </Link>
+          <div className='w-fit'>
+            <Link href='/' className='text-primary hover:text-primary/90'>
+              <LoaderIcon className='size-6' />
+            </Link>
+          </div>
         </div>
 
         <div className='grow max-sm:hidden'>

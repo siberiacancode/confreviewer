@@ -1,0 +1,21 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Conference reviewer api",
+    "version": "1.0.0",
+    "description": "This is the OpenAPI specification for the conference reviewer api."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development server"
+    }
+  ],
+  "apiDir": "app/api",
+  "schemaType": "zod",
+  "outputFile": "openapi.json",
+  "outputDir": "./public",
+  "docsUrl": "/api-docs",
+  "includeOpenApiRoutes": false,
+  "debug": false
+}

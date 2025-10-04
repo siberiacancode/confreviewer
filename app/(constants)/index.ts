@@ -1,4 +1,4 @@
-export type ConferenceType = 'jugru' | 'onteko';
+export type ConferenceType = 'jugru' | 'moscowjs' | 'onteko';
 export const JUGRU_CONFERENCE_NAME = [
   'holyjs.ru',
   'heisenbug.ru',
@@ -38,5 +38,10 @@ export const ONTEKO_CONFERENCE_NAME = [
   '1cconf.ru',
   'phprussia.ru'
 ] as const;
+export const MOSCOWJS_CONFERENCE_NAME = ['moscowjs.org'] as const;
 
-export const CONFERENCE_NAME = [...JUGRU_CONFERENCE_NAME, ...ONTEKO_CONFERENCE_NAME] as const;
+export const CONFERENCE_NAME = [
+  ...JUGRU_CONFERENCE_NAME,
+  ...ONTEKO_CONFERENCE_NAME,
+  ...MOSCOWJS_CONFERENCE_NAME
+] as const;
