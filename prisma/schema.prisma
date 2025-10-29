@@ -23,6 +23,8 @@ model Talk {
   description   String
   logo          String?
   url           String
+  likes         Int      @default(0)
+  wantsToWatch  Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

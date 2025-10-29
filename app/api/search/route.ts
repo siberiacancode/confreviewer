@@ -5,12 +5,12 @@ import { z } from 'zod';
 
 import { prisma } from '@/lib/prisma';
 
-export const SearchParams = z.object({
+export const searchParamsSchema = z.object({
   search: z.string().describe('Search query'),
   limit: z.string().describe('Limit')
 });
 
-export const SearchResponse = z.object({
+export const searchResponseSchema = z.object({
   count: z.number().describe('Count'),
   limit: z.number().describe('Limit'),
   query: z.string().describe('Query'),
@@ -31,14 +31,14 @@ export const SearchResponse = z.object({
     .describe('Talks')
 });
 
-const SearchError = z.object({
+export const searchErrorSchema = z.object({
   error: z.string().describe('Error'),
   success: z.boolean().describe('Success')
 });
 
-export type SearchResponse = z.infer<typeof SearchResponse>;
-export type SearchParams = z.infer<typeof SearchParams>;
-export type SearchError = z.infer<typeof SearchError>;
+export type SearchResponse = z.infer<typeof searchResponseSchema>;
+export type SearchParams = z.infer<typeof searchParamsSchema>;
+export type SearchError = z.infer<typeof searchErrorSchema>;
 
 /**
  * Search for talks
@@ -53,7 +53,7 @@ export const GET = async (
 ): Promise<NextResponse<SearchError | SearchResponse>> => {
   try {
     const { searchParams } = new URL(request.url);
-    const validation = SearchParams.safeParse({
+    const validation = searchParamsSchema.safeParse({
       search: searchParams.get('search'),
       limit: searchParams.get('limit')
     });

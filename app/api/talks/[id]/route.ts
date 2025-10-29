@@ -5,36 +5,25 @@ import { z } from 'zod';
 
 import { prisma } from '@/lib/prisma';
 
-export const TalkParams = z.object({
+import { talkSchema } from '../../types';
+
+export const talkParamsSchema = z.object({
   id: z.string().describe('Talk ID')
 });
 
-export const TalkResponse = z.object({
+export const talkResponseSchema = z.object({
   success: z.boolean().describe('Success'),
-  talk: z
-    .object({
-      company: z.string().describe('Company'),
-      createdAt: z.date().describe('Created at'),
-      description: z.string().describe('Description'),
-      id: z.string().describe('ID'),
-      logo: z.string().nullable().describe('Logo'),
-      speaker: z.string().describe('Speaker'),
-      speakerAvatar: z.string().nullable().describe('Speaker avatar'),
-      title: z.string().describe('Title'),
-      updatedAt: z.date().describe('Updated at'),
-      url: z.string().describe('URL')
-    })
-    .describe('Talk')
+  talk: talkSchema
 });
 
-const TalkError = z.object({
+export const talkErrorSchema = z.object({
   error: z.string().describe('Error'),
   success: z.boolean().describe('Success')
 });
 
-export type TalkResponse = z.infer<typeof TalkResponse>;
-export type TalkParams = z.infer<typeof TalkParams>;
-export type TalkError = z.infer<typeof TalkError>;
+export type TalkResponse = z.infer<typeof talkResponseSchema>;
+export type TalkParams = z.infer<typeof talkParamsSchema>;
+export type TalkError = z.infer<typeof talkErrorSchema>;
 
 /**
  * Get talk by ID
@@ -52,7 +41,7 @@ export const GET = async (
   try {
     const { id } = await params;
 
-    const validation = TalkParams.safeParse({ id });
+    const validation = talkParamsSchema.safeParse({ id });
 
     if (!validation.success) {
       return NextResponse.json(

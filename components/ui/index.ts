@@ -1,4 +1,5 @@
 export * from './animated-shiny-text';
+export * from './breadcrumb';
 export * from './button';
 export * from './card';
 export * from './dot-pattern';
