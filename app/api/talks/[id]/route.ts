@@ -3,9 +3,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+import { authGuard } from '@/lib/guards';
 import { prisma } from '@/lib/prisma';
 
-import { talkSchema } from '../../types';
+import { REACTION_MAP, talkWithReactionsSchema } from '../../types';
 
 export const talkParamsSchema = z.object({
   id: z.string().describe('Talk ID')
@@ -13,7 +14,7 @@ export const talkParamsSchema = z.object({
 
 export const talkResponseSchema = z.object({
   success: z.boolean().describe('Success'),
-  talk: talkSchema
+  talk: talkWithReactionsSchema
 });
 
 export const talkErrorSchema = z.object({
@@ -54,7 +55,8 @@ export const GET = async (
     }
 
     const talk = await prisma.talk.findUnique({
-      where: { id }
+      where: { id },
+      include: { speakers: true }
     });
 
     if (!talk) {
@@ -67,9 +69,38 @@ export const GET = async (
       );
     }
 
+    const reactions = await prisma.talkReaction.groupBy({
+      by: ['type'],
+      where: { talkId: id },
+      _count: true
+    });
+
+    const likesCount = reactions.find((reaction) => reaction.type === 'likes')?._count ?? 0;
+    const wantsToWatchCount =
+      reactions.find((reaction) => reaction.type === 'wantsToWatch')?._count ?? 0;
+
+    const talkWithReactions = {
+      ...talk,
+      likes: likesCount,
+      wantsToWatch: wantsToWatchCount,
+      liked: false,
+      wantedToWatch: false
+    };
+
+    const authUser = await authGuard();
+    if (authUser) {
+      const talkReactions = await prisma.talkReaction.findMany({
+        where: { talkId: id, userId: authUser.id }
+      });
+
+      talkReactions.forEach((reaction) => {
+        talkWithReactions[REACTION_MAP[reaction.type]] = true;
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      talk
+      talk: talkWithReactions
     });
   } catch (error) {
     console.error(error);

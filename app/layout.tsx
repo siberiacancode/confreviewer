@@ -2,7 +2,15 @@ import type { Metadata } from 'next';
 
 import { Analytics } from '@vercel/analytics/next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
 
+import type { TelegramAuthPayload } from '@/lib/telegram';
+
+import { Toaster } from '@/components/ui/sonner';
+import { decryptPayload } from '@/lib/secure';
+import { AUTH_COOKIE, toAuthUser } from '@/lib/telegram';
+
+import { TelegramWidgetScript, ThemeScript } from './(components)';
 import { Provider } from './provider';
 
 import './globals.css';
@@ -26,23 +34,35 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: RootLayoutProps) => (
-  <html className='text-[20px]' lang='en'>
-    <head>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-              const theme = document.cookie.match(/theme=(.*?)(;|$)/)?.[1] || 'light';
-              document.documentElement.classList.add(theme);
-            `
-        }}
-      />
-    </head>
-    <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Provider>{children}</Provider>
-      <Analytics mode='production' />
-    </body>
-  </html>
-);
+const getInitialAuth = async () => {
+  const cookiesStore = await cookies();
+  const raw = cookiesStore.get(AUTH_COOKIE)?.value ?? '';
+  const initialAuth = decryptPayload<TelegramAuthPayload>(raw);
+  return initialAuth ? toAuthUser(initialAuth) : undefined;
+};
+
+const RootLayout = async ({ children }: RootLayoutProps) => {
+  const initialAuth = await getInitialAuth();
+
+  return (
+    <html className='text-[20px]' lang='en'>
+      <head>
+        <ThemeScript />
+        <TelegramWidgetScript />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Provider
+          auth={{
+            initialAuth
+          }}
+        >
+          {children}
+        </Provider>
+        <Analytics mode='production' />
+        <Toaster />
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;

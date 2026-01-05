@@ -36,11 +36,29 @@ export const analyzeConference = async (
   const conferenceType = getConferenceType(url);
   const result = await parseConferenceData(conferenceType, await conferenceData.text(), url);
 
+  const existingConference = await prisma.conference.findUnique({
+    where: {
+      id: result.conference.id
+    }
+  });
+
+  if (!existingConference) {
+    await prisma.conference.create({
+      data: {
+        id: result.conference.id,
+        name: result.conference.name,
+        description: result.conference.description,
+        logo: result.conference.logo,
+        url
+      }
+    });
+  }
+
   const existingTalk = await prisma.talk.findUnique({
     where: {
-      title_speaker: {
-        title: result.title,
-        speaker: result.speaker
+      title_conferenceId: {
+        title: result.talk.title,
+        conferenceId: result.conference.id
       }
     }
   });
@@ -49,13 +67,14 @@ export const analyzeConference = async (
 
   const newTalk = await prisma.talk.create({
     data: {
-      title: result.title,
-      speaker: result.speaker,
-      speakerAvatar: result.speakerAvatar,
-      company: result.company,
-      description: result.description,
-      logo: result.logo,
-      url
+      title: result.talk.title,
+      speakers: {
+        create: result.speakers
+      },
+      description: result.talk.description,
+      logo: result.conference.logo,
+      url,
+      conferenceId: result.conference.id
     }
   });
 

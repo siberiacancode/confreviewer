@@ -9,7 +9,8 @@ import type { TalkResponse } from '@/app/api/talks/[id]/route';
 import { api } from '@/app/api/instance';
 import { Button } from '@/components/ui';
 
-import { CopyButton } from '../(components)';
+import { ActionPanel, CopyButton } from './(components)';
+import { AnalysisProvider } from './provider';
 
 interface AnalysisPageProps {
   params: Promise<{ id: string }>;
@@ -26,7 +27,7 @@ export const generateMetadata = async ({ params }: AnalysisPageProps): Promise<M
   const description = talk.description;
 
   return {
-    title: `${title} - ConfReviewer`,
+    title: `${title} - confreviewer`,
     description
   };
 };
@@ -36,54 +37,82 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
 
   const talkResponse = await api.get<TalkResponse>(`/talks/${id}`);
 
-  const talk = talkResponse.data.talk;
+  if (!talkResponse.data) notFound();
 
-  if (!talk) notFound();
+  const { talk } = talkResponse.data;
+
+  const [firstSpeaker, ...otherSpeakers] = talk.speakers;
 
   return (
-    <div>
-      <div className='flex gap-2'>
-        <div className='flex flex-col items-start justify-between gap-4'>
-          <div className='flex w-full justify-between gap-2'>
-            <h1 className='text-3xl font-medium'>{talk.title}</h1>
+    <AnalysisProvider talk={{ initialTalk: talk }}>
+      <div className='flex flex-col gap-2'>
+        <div className='flex gap-2'>
+          <div className='flex flex-col items-start justify-between gap-4'>
+            <div className='flex w-full justify-between gap-2'>
+              <div className='flex gap-3'>
+                {firstSpeaker.avatar && (
+                  <img
+                    alt={firstSpeaker.name}
+                    className='size-12 rounded-full object-cover'
+                    src={firstSpeaker.avatar}
+                  />
+                )}
+                <div className='flex flex-col justify-between'>
+                  <span>{firstSpeaker.name}</span>
+                  <p className='text-muted-foreground text-sm'>{firstSpeaker.company}</p>
+                </div>
+              </div>
 
-            <div className='flex justify-between gap-2'>
-              <CopyButton talk={talk} />
-              <Button asChild size='icon' variant='secondary'>
-                <a href={talk.url} rel='noopener noreferrer' target='_blank'>
-                  <ExternalLinkIcon className='size-4' />
-                </a>
-              </Button>
-            </div>
-          </div>
-
-          <div className='prose prose-sm dark:prose-invert max-w-none'>
-            <ReactMarkdown>{talk.description}</ReactMarkdown>
-          </div>
-
-          <div className='flex items-center justify-between gap-4'>
-            <div className='bg-card text-card-foreground flex gap-4 rounded-xl border p-2 shadow-sm'>
-              {talk.speakerAvatar && (
-                <img
-                  alt={`${talk.speaker} avatar`}
-                  className='size-10 rounded-full object-cover'
-                  src={talk.speakerAvatar}
-                />
-              )}
-
-              <div className='flex flex-col'>
-                <span className='text-sm font-medium'>{talk.speaker}</span>
-                <p className='text-xs'>{talk.company ?? 'unknown'}</p>
+              <div className='flex justify-between gap-2'>
+                <CopyButton />
+                <Button asChild size='icon' variant='secondary'>
+                  <a href={talk.url} rel='noopener noreferrer' target='_blank'>
+                    <ExternalLinkIcon className='size-4' />
+                  </a>
+                </Button>
               </div>
             </div>
 
-            {talk.logo && (
-              <img alt={`${talk.title} logo`} className='h-10 object-cover' src={talk.logo} />
+            {!!otherSpeakers.length && (
+              <div className='flex gap-3'>
+                {otherSpeakers.map((speaker) => (
+                  <div key={speaker.name} className='flex items-center gap-2'>
+                    {speaker.avatar && (
+                      <img
+                        alt={speaker.name}
+                        className='size-4.5 rounded-full object-cover'
+                        src={speaker.avatar}
+                      />
+                    )}
+                    <span className='text-muted-foreground text-sm'>{speaker.name}</span>
+                  </div>
+                ))}
+              </div>
             )}
+
+            <h1 className='text-3xl font-medium'>{talk.title}</h1>
+
+            <div className='prose prose-sm dark:prose-invert max-w-none'>
+              <ReactMarkdown>{talk.description}</ReactMarkdown>
+            </div>
           </div>
         </div>
+
+        <ActionPanel />
+
+        <div className='mt-6 flex items-center justify-between gap-4'>
+          {talk.logo && (
+            <a
+              href={`/analysis/conferences/${talk.conferenceId}`}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              <img alt={`${talk.title} logo`} className='h-10 object-cover' src={talk.logo} />
+            </a>
+          )}
+        </div>
       </div>
-    </div>
+    </AnalysisProvider>
   );
 };
 

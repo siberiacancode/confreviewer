@@ -5,6 +5,8 @@ import { z } from 'zod';
 
 import { prisma } from '@/lib/prisma';
 
+import { talkSchema } from '../types';
+
 export const searchParamsSchema = z.object({
   search: z.string().describe('Search query'),
   limit: z.string().describe('Limit')
@@ -15,20 +17,7 @@ export const searchResponseSchema = z.object({
   limit: z.number().describe('Limit'),
   query: z.string().describe('Query'),
   success: z.boolean().describe('Success'),
-  talks: z
-    .array(
-      z.object({
-        company: z.string().describe('Company'),
-        createdAt: z.date().describe('Created at'),
-        id: z.string().describe('ID'),
-        speaker: z.string().describe('Speaker'),
-        speakerAvatar: z.string().nullable().describe('Speaker avatar'),
-        title: z.string().describe('Title'),
-        updatedAt: z.date().describe('Updated at'),
-        url: z.string().describe('URL')
-      })
-    )
-    .describe('Talks')
+  talks: z.array(talkSchema).describe('Talks')
 });
 
 export const searchErrorSchema = z.object({
@@ -73,7 +62,8 @@ export const GET = async (
     if (!search.trim()) {
       const talks = await prisma.talk.findMany({
         take: Number(limit),
-        orderBy: { updatedAt: 'desc' }
+        orderBy: { updatedAt: 'desc' },
+        include: { speakers: true }
       });
 
       return NextResponse.json({
@@ -95,27 +85,23 @@ export const GET = async (
             }
           },
           {
-            speaker: {
-              contains: search,
-              mode: 'insensitive'
+            speakers: {
+              some: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive'
+                }
+              }
             }
           },
           {
-            company: {
-              contains: search,
-              mode: 'insensitive'
-            }
-          },
-          {
-            url: {
-              contains: search,
-              mode: 'insensitive'
-            }
-          },
-          {
-            description: {
-              contains: search,
-              mode: 'insensitive'
+            speakers: {
+              some: {
+                company: {
+                  contains: search,
+                  mode: 'insensitive'
+                }
+              }
             }
           }
         ]
@@ -123,7 +109,8 @@ export const GET = async (
       orderBy: {
         updatedAt: 'desc'
       },
-      take: Number(limit)
+      take: Number(limit),
+      include: { speakers: true }
     });
 
     return NextResponse.json({

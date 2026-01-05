@@ -1,1 +1,1 @@
-export * from './TalkCard/TalkCard';
+export * from './TalkItem/TalkItem';

@@ -5,29 +5,85 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model Conference {
+  id          String   @id
+  name        String
+  description String
+  logo        String?
+  url         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Talk        Talk[]
+
+  @@unique([name])
+  @@map("conferences")
 }
 
 model Talk {
-  id            String   @id @default(cuid())
-  title         String
-  speaker       String
-  speakerAvatar String?
-  company       String
-  description   String
-  logo          String?
-  url           String
-  likes         Int      @default(0)
-  wantsToWatch  Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String        @id @default(cuid())
+  title        String
+  speakers     TalkSpeaker[]
+  description  String
+  logo         String?
+  url          String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  conferenceId String
+  conference   Conference    @relation(fields: [conferenceId], references: [id])
 
-  @@unique([title, speaker])
+  reactions TalkReaction[]
+
+  @@unique([title, conferenceId])
   @@map("talks")
+}
+
+model TalkSpeaker {
+  id      String  @id @default(cuid())
+  name    String
+  company String
+  avatar  String?
+  talkId  String
+  talk    Talk    @relation(fields: [talkId], references: [id])
+
+  @@map("talk_speakers")
+}
+
+model User {
+  id        Int      @id
+  username  String?
+  firstName String?
+  lastName  String?
+  photoUrl  String?
+  createdAt DateTime @default(now())
+
+  reactions TalkReaction[]
+
+  @@map("users")
+}
+
+model TalkReaction {
+  id        String       @id @default(cuid())
+  talkId    String
+  userId    Int
+  type      ReactionType
+  createdAt DateTime     @default(now())
+
+  talk Talk @relation(fields: [talkId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([talkId, userId, type])
+  @@map("talk_reactions")
+}
+
+enum ReactionType {
+  likes
+  wantsToWatch
 }

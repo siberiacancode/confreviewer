@@ -51,7 +51,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
           </AnimatedShinyText>
         </div>
 
-        <div className='mx-auto max-w-3xl space-y-12 text-center'>
+        <div className='mx-auto flex max-w-3xl flex-col items-center justify-center gap-12 text-center'>
           <div className='flex flex-col items-center justify-center gap-2'>
             <h1 className='text-6xl font-bold text-gray-900 transition-colors dark:text-white'>
               Easy to generate information about conferences
@@ -74,7 +74,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
             {searchResponse.data.talks.map((talk) => (
               <div key={talk.id} className='text-xs text-gray-600 dark:text-gray-400'>
                 <Link href={`/analysis/${talk.id}`} className='underline'>
-                  {talk.speaker} - {talk.title}
+                  {talk.speakers[0].name} - {talk.title}
                 </Link>
               </div>
             ))}

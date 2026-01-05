@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 
 import { prisma } from '@/lib/prisma';
 
@@ -18,7 +19,7 @@ const loadGoogleFont = async (font: string, text: string) => {
 
   if (resource) {
     const response = await fetch(resource[1]);
-    if (response.status == 200) {
+    if (response.status === 200) {
       return await response.arrayBuffer();
     }
   }
@@ -52,9 +53,16 @@ const getFontSize = (lines: string[]): number => {
   return 70;
 };
 
-export default async function Image({ params }: { params: { id: string } }) {
+interface AnalysisImageProps {
+  params: Promise<{ id: string }>;
+}
+
+const AnalysisImage = async ({ params }: AnalysisImageProps) => {
+  const { id } = await params;
+
   const talk = await prisma.talk.findUnique({
-    where: { id: params.id }
+    where: { id },
+    include: { speakers: true }
   });
 
   if (!talk) {
@@ -67,30 +75,30 @@ export default async function Image({ params }: { params: { id: string } }) {
   const templatePath = path.join(process.cwd(), 'public', 'template.png');
   const imageBuffer = fs.readFileSync(templatePath);
   const backgroundImage = `url(data:image/png;base64,${imageBuffer.toString('base64')})`;
+  const speaker = talk.speakers[0];
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        position: 'relative'
+      }}
+    >
       <div
         style={{
           height: '100%',
           width: '100%',
           display: 'flex',
-          position: 'relative'
+          backgroundImage,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'none'
         }}
-      >
-        <div
-          style={{
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            backgroundImage,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'none'
-          }}
-        />
+      />
 
-        {/* {talk.logo && (
+      {/* {talk.logo && (
           <div
             style={{
               display: "flex",
@@ -114,45 +122,46 @@ export default async function Image({ params }: { params: { id: string } }) {
           </div>
         )} */}
 
+      <div
+        style={{
+          position: 'absolute',
+          top: '170px',
+          padding: '0 130px',
+          width: '100%',
+          display: 'flex'
+        }}
+      >
         <div
           style={{
-            position: 'absolute',
-            top: '170px',
-            padding: '0 130px',
-            width: '100%',
-            display: 'flex'
+            fontSize,
+            fontWeight: '700',
+            color: 'white',
+            lineHeight: 1.2
           }}
         >
-          <div
-            style={{
-              fontSize,
-              fontWeight: '700',
-              color: 'white',
-              lineHeight: 1.2
-            }}
-          >
-            {talk.title}
-          </div>
+          {talk.title}
         </div>
+      </div>
 
+      <div
+        style={{
+          position: 'absolute',
+          padding: '0 130px',
+          display: 'flex',
+          bottom: '40px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%'
+        }}
+      >
         <div
           style={{
-            position: 'absolute',
-            padding: '0 130px',
             display: 'flex',
-            bottom: '40px',
-            justifyContent: 'space-between',
             alignItems: 'center',
-            width: '100%'
+            gap: '20px'
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px'
-            }}
-          >
+          {speaker.avatar && (
             <img
               style={{
                 height: '100px',
@@ -162,15 +171,17 @@ export default async function Image({ params }: { params: { id: string } }) {
                 objectFit: 'cover'
               }}
               alt='Speaker'
-              src={talk.speakerAvatar!}
+              src={speaker.avatar}
             />
+          )}
 
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-            >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {speaker.name && (
               <div
                 style={{
                   fontSize: 45,
@@ -178,33 +189,38 @@ export default async function Image({ params }: { params: { id: string } }) {
                   color: 'white'
                 }}
               >
-                {talk.speaker}
+                {speaker.name}
               </div>
-              {talk.company && (
-                <div
-                  style={{
-                    fontSize: 35,
-                    color: 'white',
-                    opacity: 0.8
-                  }}
-                >
-                  {talk.company}
-                </div>
-              )}
-            </div>
+            )}
+            {speaker.company && (
+              <div
+                style={{
+                  fontSize: 35,
+                  color: 'white',
+                  opacity: 0.8
+                }}
+              >
+                {speaker.company}
+              </div>
+            )}
           </div>
         </div>
       </div>
-    ),
+    </div>,
     {
       ...size,
       fonts: [
         {
           name: 'Geist',
-          data: await loadGoogleFont('Geist', talk.title + talk.speaker + (talk.company || '')),
+          data: await loadGoogleFont(
+            'Geist',
+            talk.title + (talk.speakers[0].name || '') + (talk.speakers[0].company || '')
+          ),
           style: 'normal'
         }
       ]
     }
   );
-}
+};
+
+export default AnalysisImage;

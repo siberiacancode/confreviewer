@@ -48,13 +48,37 @@ export const parseMoscowjs = async (url: string, html: string) => {
       .replace(/["']?\)$/, '')}`;
   }
 
+  const conferenceUrl = doc.querySelector('[class*="item__ItemMeta"]')!.querySelector('a')!.href;
+  const conferenceData = await fetch(`https://moscowjs.org${conferenceUrl}`);
+  const conferenceHtml = await conferenceData.text();
+  const conferenceDom = new JSDOM(conferenceHtml);
+  const conferenceDoc = conferenceDom.window.document;
+  const conferenceName = conferenceDoc
+    .querySelector('[class*="event__EventTitle"]')!
+    .textContent!.trim();
+  const conferenceDescription = conferenceDoc
+    .querySelector('[class*="event__Section"]')!
+    .textContent!.trim();
+  const conferenceId = conferenceName.replaceAll(' ', '_').toLowerCase();
+
   return {
-    title,
-    description,
-    speaker,
-    speakerAvatar,
-    company,
-    logo,
-    url
+    speakers: [
+      {
+        name: speaker,
+        company,
+        avatar: speakerAvatar
+      }
+    ],
+    talk: {
+      title,
+      description,
+      url
+    },
+    conference: {
+      id: conferenceId,
+      name: conferenceName,
+      description: conferenceDescription,
+      logo
+    }
   };
 };

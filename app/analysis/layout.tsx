@@ -1,12 +1,14 @@
+import type { ReactNode } from 'react';
+
 import { LoaderIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui';
 
-import { SearchInput, ThemeButton } from './(components)';
+import { AuthBlock, SearchInput, ThemeButton } from './(components)';
 
 interface AnalysisLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
@@ -31,14 +33,13 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
               Community
             </a>
           </Button>
-          <div className='flex items-center gap-1'>
-            <ThemeButton />
-          </div>
+          <ThemeButton />
+          <AuthBlock />
         </div>
       </div>
     </header>
 
-    <div className='mt-4'>{children}</div>
+    <div className='my-4'>{children}</div>
   </div>
 );
 

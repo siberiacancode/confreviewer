@@ -1,11 +1,18 @@
-import { getAllConferences } from '../helpers/getConferences';
+import type { ConferencesResponse } from '@/app/api/conferences/route';
+import type { Conference } from '@/app/api/types';
+
+import { api } from '@/app/api/instance';
+
 import { ConferencesFilters } from './(components)';
 
 interface ConferencesPageSearchParams {
   search?: string;
 }
 
-const filterConferences = (conferences: any[], searchParams: ConferencesPageSearchParams) => {
+const filterConferences = (
+  conferences: Conference[],
+  searchParams: ConferencesPageSearchParams
+) => {
   const { search } = searchParams;
 
   let results = [...conferences];
@@ -28,12 +35,13 @@ export interface ConferencesPageProps {
 }
 
 const ConferencesPage = async ({ searchParams }: ConferencesPageProps) => {
-  const conferences = await getAllConferences();
+  const conferencesResponse = await api.get<ConferencesResponse>('/conferences');
+  const conferences = conferencesResponse.data.conferences;
 
   const filteredConferences = filterConferences(conferences, (await searchParams) ?? {});
 
   return (
-    <div className='space-y-6'>
+    <div className='flex flex-col gap-6'>
       <div>
         <h1 className='text-3xl font-medium'>Conferences</h1>
         <p className='text-muted-foreground mt-2 text-sm'>
@@ -64,9 +72,6 @@ const ConferencesPage = async ({ searchParams }: ConferencesPageProps) => {
                     {conference.description}
                   </p>
                 )}
-                <p className='text-muted-foreground text-xs font-extralight'>
-                  {conference.talks.length} talks
-                </p>
               </div>
             </div>
           </a>

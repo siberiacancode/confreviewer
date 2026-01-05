@@ -4,30 +4,37 @@ const AnalysisLoading = () => (
   <div>
     <div className='flex gap-2'>
       <div className='flex w-full flex-col items-start justify-between gap-4'>
-        <div className='flex w-full justify-between'>
-          <Skeleton className='h-15 w-2/3' />
+        <div className='flex w-full justify-between gap-2'>
+          <div className='flex gap-3'>
+            <Skeleton className='size-12 rounded-full' />
+            <div className='flex flex-col justify-between'>
+              <Skeleton className='h-4 w-28' />
+              <Skeleton className='h-3 w-20' />
+            </div>
+          </div>
+
           <div className='flex justify-between gap-2'>
-            <Skeleton className='h-9 w-32' />
+            <Skeleton className='h-9 w-29' />
             <Skeleton className='size-9' />
           </div>
         </div>
 
-        <div className='flex w-full flex-col gap-3'>
-          <Skeleton className='h-20 w-full' />
-          <Skeleton className='h-10 w-4/6' />
-          <Skeleton className='h-15 w-4/5' />
+        <Skeleton className='h-9 w-3/4' />
+
+        <div className='flex w-full flex-col gap-2'>
+          <Skeleton className='h-5 w-full' />
+          <Skeleton className='h-5 w-5/6' />
+          <Skeleton className='h-5 w-4/5' />
         </div>
 
-        <div className='flex w-full items-center gap-4'>
-          <div className='bg-card flex items-center gap-4 rounded-xl border p-2'>
-            <Skeleton className='size-10 rounded-full' />
-            <div className='flex flex-col gap-1'>
-              <Skeleton className='h-4 w-24' />
-              <Skeleton className='h-3 w-16' />
-            </div>
-          </div>
+        <div className='flex items-center gap-2'>
+          <Skeleton className='h-6.5 w-14 rounded-full' />
+          <Skeleton className='h-6.5 w-16 rounded-full' />
+          <Skeleton className='h-6.5 w-16 rounded-full' />
+        </div>
 
-          <Skeleton className='h-10 w-20' />
+        <div className='mt-6 flex w-full items-center justify-between gap-4'>
+          <Skeleton className='h-10 w-28' />
         </div>
       </div>
     </div>

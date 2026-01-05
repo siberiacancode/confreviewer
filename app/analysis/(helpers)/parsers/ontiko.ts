@@ -8,21 +8,29 @@ export const parseOntiko = async (url: string, html: string) => {
 
   const titleElement = doc.querySelector('h2');
   const descriptionElement = doc.querySelector('.thesis__article .thesis__text');
-  const speakerElement = doc.querySelector('.thesis__author-name');
-  const companyElement = doc.querySelector('.thesis__author-company');
-  const avatarElement = doc.querySelector('.thesis__author-img');
+
+  const speakerElements = doc.querySelectorAll('.thesis__item-main');
+  const speakers = Array.from(speakerElements).map((speakerElement) => {
+    const nameElement = speakerElement.querySelector('.thesis__author-name');
+    const companyElement = speakerElement.querySelector('.thesis__author-company');
+    const avatarElement = speakerElement.querySelector('.thesis__author-img');
+
+    let speakerAvatar;
+    if (avatarElement) {
+      const style = avatarElement.getAttribute('style');
+      const bgImageMatch = style?.match(/background-image:\s*url\(['"]?([^'")\s]+)['"]?\)/);
+      speakerAvatar = bgImageMatch ? `${new URL(url).origin}${bgImageMatch[1]}` : undefined;
+    }
+
+    return {
+      name: nameElement!.textContent!.trim(),
+      company: companyElement!.textContent!.trim(),
+      avatar: speakerAvatar
+    };
+  });
 
   const title = titleElement!.textContent!.trim();
   const description = await htmlToMarkdown(descriptionElement!.innerHTML);
-  const speaker = speakerElement!.textContent!.trim();
-  const company = companyElement!.textContent!.trim();
-
-  let speakerAvatar;
-  if (avatarElement) {
-    const style = avatarElement.getAttribute('style');
-    const bgImageMatch = style?.match(/background-image:\s*url\(['"]?([^'")\s]+)['"]?\)/);
-    speakerAvatar = bgImageMatch ? `${new URL(url).origin}${bgImageMatch[1]}` : undefined;
-  }
 
   let logo;
   const logoContainerElement = doc.querySelector('[class*="header__logo"], [class*="nav__logo"]');
@@ -39,13 +47,21 @@ export const parseOntiko = async (url: string, html: string) => {
     }
   }
 
+  const [conferenceName, conferenceDescription] = doc.title.split(' - ');
+  const conferenceId = conferenceName.replaceAll(' ', '_').toLowerCase();
+
   return {
-    title,
-    speaker,
-    speakerAvatar,
-    company,
-    description,
-    logo,
-    url
+    speakers,
+    talk: {
+      title,
+      description,
+      url
+    },
+    conference: {
+      id: conferenceId,
+      name: conferenceName,
+      description: conferenceDescription,
+      logo
+    }
   };
 };
