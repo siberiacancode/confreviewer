@@ -2,11 +2,10 @@
 
 import { createContext } from 'react';
 
-import type { AuthUser, TelegramAuthPayload } from '@/lib/telegram';
-
 export interface AuthContextValue {
+  metadata: AuthMetadata;
   user: AuthUser | undefined;
-  login: (payload: TelegramAuthPayload) => Promise<void> | void;
+  login: (user: AuthUser) => Promise<void> | void;
   logout: () => Promise<void> | void;
   setUser: (user: AuthUser | undefined) => void;
   authModal: {
@@ -18,6 +17,9 @@ export interface AuthContextValue {
 
 export const AuthContext = createContext<AuthContextValue>({
   user: undefined,
+  metadata: {
+    isAdmin: false
+  },
   setUser: () => {},
   logout: () => {},
   login: () => {},

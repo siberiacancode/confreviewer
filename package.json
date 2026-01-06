@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev --turbopack",
-    "build": "prisma generate && prisma db push && next build --turbopack",
+    "build": "prisma generate && prisma db push --force-reset && next build --turbopack",
     "start": "next start -p 3000",
     "lint": "eslint . --fix",
     "lint-inspector": "npx @eslint/config-inspector@latest",

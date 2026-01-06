@@ -57,12 +57,12 @@ model TalkSpeaker {
 }
 
 model User {
-  id        Int      @id
+  id        Int     @id
   username  String?
   firstName String?
   lastName  String?
   photoUrl  String?
-  createdAt DateTime @default(now())
+  createdAt Int
 
   reactions TalkReaction[]
 

@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 
 import type { TalkWithReactions } from '@/app/api/types';
 
+import { ROUTES } from '@/app/(constants)';
 import { useAuth } from '@/app/(contexts)/auth';
 import { actionTalk } from '@/app/analysis/(actions)/actionTalk';
 import { REACTION_MAP } from '@/app/api/types';
@@ -92,7 +93,7 @@ export const TalkItem = ({ talk }: TalkItemProps) => {
         )}
 
         <div>
-          <Link href={`/analysis/${talk.id}`} className='hover:opacity-70'>
+          <Link href={ROUTES.TALK(talk.id)} className='hover:opacity-70'>
             <h3 className='text-2xl leading-tight font-semibold'>{talk.title}</h3>
           </Link>
 

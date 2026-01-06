@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 
-import { ExternalLinkIcon, EyeIcon, FileTextIcon, HeartIcon } from 'lucide-react';
+import { ExternalLinkIcon, EyeIcon, FileTextIcon, HeartIcon, PencilIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 import type { TalksResponse } from '@/app/api/talks/route';
 
+import { ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 import {
   Breadcrumb,
@@ -15,7 +16,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  Button
+  Button,
+  ButtonGroup
 } from '@/components/ui';
 
 import { TalkItem } from './(components)/TalkItem/TalkItem';
@@ -56,7 +58,7 @@ const ConferencePage = async ({ params }: ConferencePageProps) => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href='/analysis/conferences'>Конференции</Link>
+              <Link href={ROUTES.CONFERENCES}>Конференции</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -104,11 +106,19 @@ const ConferencePage = async ({ params }: ConferencePageProps) => {
           </div>
         </div>
 
-        <Button asChild size='icon' title='Перейти к докладам' variant='secondary'>
-          <a href={conference.url} rel='noopener noreferrer' target='_blank'>
-            <ExternalLinkIcon aria-label='Перейти к докладам' className='size-4' />
-          </a>
-        </Button>
+        <ButtonGroup>
+          <Button asChild size='sm' title='Опрос' variant='secondary'>
+            <Link href={ROUTES.CONFERENCE_FORM(conference.id)} target='_blank'>
+              <PencilIcon className='size-4' />
+              Опрос
+            </Link>
+          </Button>
+          <Button asChild size='icon' title='Перейти к докладам' variant='secondary'>
+            <a href={conference.url} rel='noopener noreferrer' target='_blank'>
+              <ExternalLinkIcon aria-label='Перейти к докладам' className='size-4' />
+            </a>
+          </Button>
+        </ButtonGroup>
       </div>
 
       <ul className='mb-10 flex flex-col gap-6'>

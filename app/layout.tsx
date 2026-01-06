@@ -3,14 +3,16 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { cookies } from 'next/headers';
+import process from 'node:process';
 
 import type { TelegramAuthPayload } from '@/lib/telegram';
 
+import { COOKIES } from '@/app/(constants)';
 import { Toaster } from '@/components/ui/sonner';
 import { decryptPayload } from '@/lib/secure';
-import { AUTH_COOKIE, toAuthUser } from '@/lib/telegram';
 
 import { TelegramWidgetScript, ThemeScript } from './(components)';
+import { telegram } from './(contexts)/auth/telegram';
 import { Provider } from './provider';
 
 import './globals.css';
@@ -36,9 +38,18 @@ interface RootLayoutProps {
 
 const getInitialAuth = async () => {
   const cookiesStore = await cookies();
-  const raw = cookiesStore.get(AUTH_COOKIE)?.value ?? '';
+  const raw = cookiesStore.get(COOKIES.AUTH)?.value ?? '';
   const initialAuth = decryptPayload<TelegramAuthPayload>(raw);
-  return initialAuth ? toAuthUser(initialAuth) : undefined;
+
+  const adminIds = JSON.parse(process.env.TELEGRAM_ADMIN_IDS ?? '[]') as number[];
+  const isAdmin = initialAuth ? adminIds.includes(initialAuth.id) : false;
+
+  return {
+    initialUser: initialAuth ? telegram.transformPayload(initialAuth) : undefined,
+    initialMetadata: {
+      isAdmin
+    }
+  };
 };
 
 const RootLayout = async ({ children }: RootLayoutProps) => {
@@ -51,14 +62,8 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <TelegramWidgetScript />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Provider
-          auth={{
-            initialAuth
-          }}
-        >
-          {children}
-        </Provider>
-        <Analytics mode='production' />
+        <Provider auth={initialAuth}>{children}</Provider>
+        {process.env.NODE_ENV === 'production' && <Analytics mode='production' />}
         <Toaster />
       </body>
     </html>

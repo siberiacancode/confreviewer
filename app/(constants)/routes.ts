@@ -1,12 +1,14 @@
 export const ROUTES = {
   HOME: '/',
   ANALYSIS: '/analysis',
+  PROFILE: '/profile',
   TALK: (id: string) => `/analysis/${id}`,
   CONFERENCES: '/analysis/conferences',
-  CONFERENCE: (id: string) => `/analysis/conferences/${id}`,
+  CONFERENCE_FEED: (id: string) => `/analysis/conferences/${id}/feed`,
   CONFERENCE_FORM: (id: string) => `/analysis/conferences/${id}/form`,
   ADMIN: {
-    EDIT_TALK: (id: string) => `/analysis/${id}/edit`
+    EDIT_TALK: (id: string) => `/analysis/${id}/edit`,
+    INSERT_CONFERENCE: '/conferences/insert'
   }
 } as const;
 

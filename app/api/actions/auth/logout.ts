@@ -2,12 +2,12 @@
 
 import { cookies } from 'next/headers';
 
-import { AUTH_COOKIE } from '@/lib/telegram';
+import { COOKIES } from '@/app/(constants)';
 
 export const logout = async () => {
   const cookieStore = await cookies();
   cookieStore.set({
-    name: AUTH_COOKIE,
+    name: COOKIES.AUTH,
     value: '',
     path: '/',
     maxAge: 0

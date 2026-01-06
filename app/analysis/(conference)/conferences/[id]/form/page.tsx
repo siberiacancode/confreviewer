@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 import type { TalksResponse } from '@/app/api/talks/route';
 
+import { ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 import {
   Breadcrumb,
@@ -50,13 +51,13 @@ const ConferenceFormPage = async ({ params }: ConferenceFormPageProps) => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href='/analysis/conferences'>Конференции</Link>
+                <Link href={ROUTES.CONFERENCES}>Конференции</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/analysis/conferences/${id}`}>{conference.name}</Link>
+                <Link href={ROUTES.CONFERENCE_FEED(id)}>{conference.name}</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

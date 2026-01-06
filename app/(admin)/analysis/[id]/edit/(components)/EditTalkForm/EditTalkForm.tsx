@@ -5,6 +5,7 @@ import type { SerializedEditorState } from 'lexical';
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { ROUTES } from '@/app/(constants)';
 import { Editor } from '@/components/blocks/editor-00/editor';
 import {
   Avatar,
@@ -60,10 +61,7 @@ export const EditTalkForm = () => {
       <form className='mx-auto flex max-w-5xl flex-col gap-6 py-10' onSubmit={functions.onSubmit}>
         <div className='flex justify-between'>
           <Button asChild className='rounded-full' variant='ghost'>
-            <Link
-              href={`/analysis/${state.talk.id}`}
-              className='flex items-center gap-2 font-medium'
-            >
+            <Link href={ROUTES.TALK(state.talk.id)} className='flex items-center gap-2 font-medium'>
               <ChevronLeftIcon className='size-4' />
               Назад
             </Link>

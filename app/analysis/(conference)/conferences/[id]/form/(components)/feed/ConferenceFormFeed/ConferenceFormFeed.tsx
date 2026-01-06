@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  ChevronRightIcon,
-  EyeIcon,
-  HeartIcon
-} from 'lucide-react';
+import { ChevronRightIcon, EyeIcon, HeartIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -59,7 +55,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
           <h2 className='text-2xl font-semibold'>Спасибо, что заполнили опрос</h2>
 
           <Button asChild className='rounded-full'>
-            <Link href={ROUTES.CONFERENCE(conferenceId)}>Вернуться</Link>
+            <Link href={ROUTES.CONFERENCE_FEED(conferenceId)}>Вернуться</Link>
           </Button>
         </div>
       </div>
@@ -88,7 +84,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
 
           <div className='min-w-0 flex-1'>
             <Link
-              href={`/analysis/${talk.id}`}
+              href={ROUTES.TALK(talk.id)}
               className='hover:opacity-70'
               rel='noopener noreferrer'
               target='_blank'

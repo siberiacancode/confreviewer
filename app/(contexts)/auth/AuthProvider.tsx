@@ -1,50 +1,48 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import { useDisclosure } from '@siberiacancode/reactuse';
-import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-import type { AuthUser, TelegramAuthPayload } from '@/lib/telegram';
-
-import { login, logout } from '@/app/(actions)';
-import { toAuthUser } from '@/lib/telegram';
+import { login, logout } from '@/app/api/actions';
 
 import { AuthContext } from './AuthContext';
 import { AuthModal } from './components';
 
 interface AuthProviderProps {
-  children: React.ReactNode;
-  initialAuth?: AuthUser;
+  children: ReactNode;
+  initialMetadata?: AuthMetadata;
+  initialUser?: AuthUser;
 }
 
-export const AuthProvider = ({ children, initialAuth }: AuthProviderProps) => {
-  const router = useRouter();
-  const [user, setUser] = useState(initialAuth);
-  const authModal = useDisclosure();
+const DEFAULT_METADATA: AuthMetadata = { isAdmin: false };
 
-  const onLogin = async (payload: TelegramAuthPayload) => {
-    await login(payload);
-    setUser(toAuthUser(payload));
+export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthProviderProps) => {
+  const authModal = useDisclosure();
+  const [user, setUser] = useState(initialUser);
+
+  const onLogin = async (user: AuthUser) => {
+    await login({ user });
+    setUser(user);
     authModal.close();
-    router.refresh();
   };
 
   const onLogout = async () => {
     await logout();
     setUser(undefined);
-    router.refresh();
   };
 
   const value = useMemo(
     () => ({
       user,
+      metadata: { ...DEFAULT_METADATA, ...initialMetadata },
       authModal,
-      isAuthenticated: Boolean(user),
       setUser,
       logout: onLogout,
       login: onLogin
     }),
-    [authModal.opened]
+    [user, authModal.opened]
   );
 
   return (

@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 
 import { ExternalLinkIcon } from 'lucide-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
 import type { TalkResponse } from '@/app/api/talks/[id]/route';
 
+import { ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 import { Button } from '@/components/ui';
 
@@ -102,13 +104,13 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
 
         <div className='mt-6 flex items-center justify-between gap-4'>
           {talk.logo && (
-            <a
-              href={`/analysis/conferences/${talk.conferenceId}`}
+            <Link
+              href={ROUTES.CONFERENCE_FEED(talk.conferenceId)}
               rel='noopener noreferrer'
               target='_blank'
             >
               <img alt={`${talk.title} logo`} className='h-10 object-cover' src={talk.logo} />
-            </a>
+            </Link>
           )}
         </div>
       </div>

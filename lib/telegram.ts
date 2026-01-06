@@ -1,9 +1,5 @@
 import { Buffer } from 'node:buffer';
 
-const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-export const AUTH_COOKIE = 'conference-reviewer-auth';
-export const TELEGRAM_MAX_AGE_MS = ONE_WEEK_MS;
-
 export interface TelegramAuthPayload {
   auth_date: number;
   first_name?: string;

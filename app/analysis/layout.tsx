@@ -3,9 +3,12 @@ import type { ReactNode } from 'react';
 import { LoaderIcon } from 'lucide-react';
 import Link from 'next/link';
 
+import { ROUTES } from '@/app/(constants)';
 import { Button } from '@/components/ui';
 
 import { AuthBlock, SearchInput, ThemeButton } from './(components)';
+
+const COMMUNITY_URL = 'https://t.me/siberiacancodee';
 
 interface AnalysisLayoutProps {
   children: ReactNode;
@@ -17,7 +20,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
       <div className='flex h-16 items-center justify-between gap-4'>
         <div className='flex-1'>
           <div className='w-fit'>
-            <Link href='/' className='text-primary hover:text-primary/90'>
+            <Link href={ROUTES.HOME} className='text-primary hover:text-primary/90'>
               <LoaderIcon className='size-6' />
             </Link>
           </div>
@@ -29,7 +32,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
         <div className='flex flex-1 items-center justify-end gap-2'>
           <Button asChild className='text-sm' size='sm' variant='ghost'>
-            <a href='https://github.com/siberiacancode' rel='noopener noreferrer' target='_blank'>
+            <a href={COMMUNITY_URL} rel='noopener noreferrer' target='_blank'>
               Community
             </a>
           </Button>

@@ -27,7 +27,7 @@ export const AuthModal = () => {
 
   if (isMobile) {
     return (
-      <Drawer onOpenChange={functions.close} open={state.opened}>
+      <Drawer onOpenChange={functions.onClose} open={state.opened}>
         <DrawerContent>
           <DrawerHeader className='flex flex-col items-center justify-center'>
             <DrawerTitle>Sign in</DrawerTitle>
@@ -39,7 +39,7 @@ export const AuthModal = () => {
               className='rounded-full'
               size='lg'
               variant='secondary'
-              onClick={functions.login}
+              onClick={functions.onLogin}
             >
               <TelegramIcon className='size-5' />
               <span>Sign in via Telegram</span>
@@ -52,7 +52,7 @@ export const AuthModal = () => {
   }
 
   return (
-    <Dialog onOpenChange={functions.close} open={state.opened}>
+    <Dialog onOpenChange={functions.onClose} open={state.opened}>
       <DialogContent className='w-sm'>
         <DialogHeader className='flex flex-col items-center justify-center'>
           <DialogTitle>Sign in</DialogTitle>
@@ -60,7 +60,12 @@ export const AuthModal = () => {
         </DialogHeader>
 
         <div className='flex flex-col gap-3'>
-          <Button className='rounded-full' size='lg' variant='secondary' onClick={functions.login}>
+          <Button
+            className='rounded-full'
+            size='lg'
+            variant='secondary'
+            onClick={functions.onLogin}
+          >
             <TelegramIcon className='size-5' />
             <span>Sign in via Telegram</span>
           </Button>

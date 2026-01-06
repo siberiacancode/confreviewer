@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 
 import type { SearchResponse } from '../api/search/route';
 
+import { ROUTES } from '../(constants)/routes';
 import { api } from '../api/instance';
 
 interface MainLayoutProps {
@@ -73,7 +74,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
           <div className='mt-4 flex flex-col items-center justify-center gap-1'>
             {searchResponse.data.talks.map((talk) => (
               <div key={talk.id} className='text-xs text-gray-600 dark:text-gray-400'>
-                <Link href={`/analysis/${talk.id}`} className='underline'>
+                <Link href={ROUTES.TALK(talk.id)} className='underline'>
                   {talk.speakers[0].name} - {talk.title}
                 </Link>
               </div>

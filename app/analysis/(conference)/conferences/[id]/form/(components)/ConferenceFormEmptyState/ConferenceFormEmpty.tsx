@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 
+import { ROUTES } from '@/app/(constants)';
 import { Button } from '@/components/ui';
 
 type Conference = ConferenceResponse['conference'];
@@ -22,7 +23,7 @@ export const ConferenceFormEmpty = ({ conference }: ConferenceFormEmptyProps) =>
       На данный момент данная конференция не имеет доступных докладов для опроса.
     </p>
     <Button asChild className='mt-6 w-fit rounded-full'>
-      <Link href={`/analysis/conferences/${conference.id}`}>Вернуться</Link>
+      <Link href={ROUTES.CONFERENCE_FEED(conference.id)}>Вернуться</Link>
     </Button>
   </div>
 );

@@ -2,7 +2,10 @@
 
 import { useCopy } from '@siberiacancode/reactuse';
 import { CheckIcon, ChevronDownIcon, CopyIcon } from 'lucide-react';
+import Link from 'next/link';
 
+import { ROUTES } from '@/app/(constants)';
+import { useAuth } from '@/app/(contexts)/auth';
 import {
   Button,
   ButtonGroup,
@@ -15,6 +18,7 @@ import {
 import { useTalk } from '../../(contexts)';
 
 export const CopyButton = () => {
+  const authContext = useAuth();
   const talkContext = useTalk();
   const talk = talkContext.talk!;
 
@@ -53,6 +57,13 @@ export const CopyButton = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={onGetOgImage}>Get og image</DropdownMenuItem>
+          {authContext.metadata.isAdmin && (
+            <DropdownMenuItem asChild>
+              <Link href={ROUTES.ADMIN.EDIT_TALK(talk.id)} target='_blank'>
+                Edit talk
+              </Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </ButtonGroup>

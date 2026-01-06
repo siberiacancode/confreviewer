@@ -3,9 +3,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import process from 'node:process';
 
-import { checkAdminRoute } from '@/app/(constants)';
+import { checkAdminRoute, COOKIES } from '@/app/(constants)';
 import { authGuard } from '@/lib/guards';
-import { AUTH_COOKIE } from '@/lib/telegram';
 
 export const config = {
   matcher: ['/((?!api|_vercel/insights|_next/static|_next/image|.*\\.png$).*)']
@@ -29,7 +28,7 @@ export const proxy = async (request: NextRequest) => {
 
   if (!authUser) {
     response.cookies.set({
-      name: AUTH_COOKIE,
+      name: COOKIES.AUTH,
       value: '',
       path: '/',
       maxAge: 0

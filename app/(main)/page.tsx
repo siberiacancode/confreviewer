@@ -15,6 +15,7 @@ import { Button, ShineBorder } from '@/components/ui';
 
 import type { SearchResponse } from '../api/search/route';
 
+import { ROUTES } from '../(constants)/routes';
 import { api } from '../api/instance';
 import { analyzeConference } from './actions';
 
@@ -85,7 +86,7 @@ const Home = () => {
           <div className='bg-background absolute top-15 w-full rounded-xl border border-gray-200 p-2 dark:border-white/10'>
             {talks.map((talk) => (
               <div key={talk.id} className='text-xs text-gray-600 dark:text-gray-400'>
-                <Link href={`/analysis/${talk.id}`}>
+                <Link href={ROUTES.TALK(talk.id)}>
                   <div className='flex items-center gap-4 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/10'>
                     <div className='size-9 flex-shrink-0'>
                       <img

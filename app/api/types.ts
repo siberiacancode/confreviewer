@@ -17,11 +17,11 @@ export const talkSpeakerSchema = z
 export const userSchema = z
   .object({
     id: z.number().describe('ID'),
-    username: z.string().nullable().describe('Username'),
-    firstName: z.string().nullable().describe('First name'),
-    lastName: z.string().nullable().describe('Last name'),
-    photoUrl: z.string().nullable().describe('Photo URL'),
-    createdAt: z.date().describe('Created at')
+    username: z.string().optional().describe('Username'),
+    firstName: z.string().optional().describe('First name'),
+    lastName: z.string().optional().describe('Last name'),
+    photoUrl: z.string().optional().describe('Photo URL'),
+    createdAt: z.number().describe('Created at')
   })
   .describe('User');
 

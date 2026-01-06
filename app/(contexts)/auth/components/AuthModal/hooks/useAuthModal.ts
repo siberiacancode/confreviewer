@@ -1,35 +1,26 @@
 import { toast } from 'sonner';
 
-import type { TelegramAuthPayload } from '@/lib/telegram';
-
+import { telegram } from '../../../telegram';
 import { useAuth } from '../../../useAuth';
-
-const BOT_ID = '8481240266';
 
 export const useAuthModal = () => {
   const auth = useAuth();
 
-  const login = () => {
-    (window as any).Telegram.Login.auth(
-      {
-        bot_id: BOT_ID,
-        request_access: true
-      },
-      (payload: TelegramAuthPayload) => {
-        if (!payload) return toast.error('Failed to authenticate');
-        auth.login(payload);
-      }
-    );
-  };
+  const onLogin = () =>
+    telegram.login((payload) => {
+      if (!payload) return toast.error('Failed to authenticate');
+      const user = telegram.transformPayload(payload);
+      auth.login(user);
+    });
 
   return {
     state: {
       opened: auth.authModal.opened
     },
     functions: {
-      open: auth.authModal.open,
-      close: auth.authModal.close,
-      login
+      onOpen: auth.authModal.open,
+      onClose: auth.authModal.close,
+      onLogin
     }
   };
 };
