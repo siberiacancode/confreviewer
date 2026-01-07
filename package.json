@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && next build --webpack",
+    "build": "prisma generate && next build",
     "start": "next start -p 3000",
     "lint": "eslint . --fix",
     "lint-inspector": "npx @eslint/config-inspector@latest",
@@ -49,7 +49,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "iron-session": "^8.0.4",
-    "jsdom": "27.0.0",
+    "jsdom": "26.1.0",
     "lexical": "^0.39.0",
     "lucide-react": "^0.562.0",
     "motion": "^12.23.26",
