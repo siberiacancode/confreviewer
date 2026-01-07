@@ -87,8 +87,8 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
       '@siberiacancode/reactuse':
-        specifier: ^0.3.4
-        version: 0.3.4(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@tailwindcss/typography':
         specifier: ^0.5.19
         version: 0.5.19(tailwindcss@4.1.18)
@@ -168,8 +168,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       zod:
-        specifier: ^4.2.1
-        version: 4.2.1
+        specifier: ^4.3.5
+        version: 4.3.5
     devDependencies:
       '@siberiacancode/eslint':
         specifier: ^2.14.0
@@ -1645,8 +1645,8 @@ packages:
     peerDependencies:
       prettier: ^3.7.4
 
-  '@siberiacancode/reactuse@0.3.4':
-    resolution: {integrity: sha512-vdEIYRq/1VcL1s+++a3akr1DHbVfVmw7PLt97xF3F+Ufpp3pZVhn5IP/7H+ndd2hHYLFet5DyfYGTjG+0OeGdg==}
+  '@siberiacancode/reactuse@0.3.5':
+    resolution: {integrity: sha512-O28DZKsf5cDE9p7x+Sj2MNbb+nBj0lRpI8ufPIrRNJPe8QrSt+atYzMe4YLcDv6k95fa5nPEJ01/w7BfkdxzZg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@types/react': ^18 || ^19
@@ -4919,8 +4919,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.2.1:
-    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
+  zod@4.3.5:
+    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -5348,7 +5348,7 @@ snapshots:
       eslint: 9.39.2(jiti@2.6.1)
       ts-pattern: 5.9.0
       typescript: 5.9.3
-      zod: 4.2.1
+      zod: 4.3.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6453,7 +6453,7 @@ snapshots:
 
   '@scalar/analytics-client@1.0.1':
     dependencies:
-      zod: 4.2.1
+      zod: 4.3.5
 
   '@scalar/api-client@2.17.1(change-case@5.4.4)(tailwindcss@4.1.18)(typescript@5.9.3)':
     dependencies:
@@ -6495,7 +6495,7 @@ snapshots:
       vue-router: 4.6.2(vue@3.5.26(typescript@5.9.3))
       whatwg-mimetype: 4.0.0
       yaml: 2.8.2
-      zod: 4.2.1
+      zod: 4.3.5
     transitivePeerDependencies:
       - '@vue/composition-api'
       - async-validator
@@ -6564,7 +6564,7 @@ snapshots:
       nanoid: 5.1.5
       type-fest: 5.0.0
       vue: 3.5.26(typescript@5.9.3)
-      zod: 4.2.1
+      zod: 4.3.5
     transitivePeerDependencies:
       - '@vue/composition-api'
       - async-validator
@@ -6665,7 +6665,7 @@ snapshots:
       flatted: 3.3.3
       type-fest: 5.0.0
       yaml: 2.8.2
-      zod: 4.2.1
+      zod: 4.3.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6691,7 +6691,7 @@ snapshots:
 
   '@scalar/openapi-types@0.5.3':
     dependencies:
-      zod: 4.2.1
+      zod: 4.3.5
 
   '@scalar/openapi-upgrader@0.1.6':
     dependencies:
@@ -6737,7 +6737,7 @@ snapshots:
       '@scalar/helpers': 0.2.4
       nanoid: 5.1.5
       type-fest: 5.0.0
-      zod: 4.2.1
+      zod: 4.3.5
 
   '@scalar/use-codemirror@0.13.6(typescript@5.9.3)':
     dependencies:
@@ -6769,7 +6769,7 @@ snapshots:
       cva: 1.0.0-beta.2(typescript@5.9.3)
       tailwind-merge: 2.6.0
       vue: 3.5.26(typescript@5.9.3)
-      zod: 4.2.1
+      zod: 4.3.5
     transitivePeerDependencies:
       - typescript
 
@@ -6839,7 +6839,7 @@ snapshots:
     dependencies:
       prettier: 3.7.4
 
-  '@siberiacancode/reactuse@0.3.4(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@siberiacancode/reactuse@0.3.5(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
@@ -8002,8 +8002,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.39.2(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.2.1
-      zod-validation-error: 4.0.2(zod@4.2.1)
+      zod: 4.3.5
+      zod-validation-error: 4.0.2(zod@4.3.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -10688,10 +10688,10 @@ snapshots:
 
   zhead@2.2.4: {}
 
-  zod-validation-error@4.0.2(zod@4.2.1):
+  zod-validation-error@4.0.2(zod@4.3.5):
     dependencies:
-      zod: 4.2.1
+      zod: 4.3.5
 
-  zod@4.2.1: {}
+  zod@4.3.5: {}
 
   zwitch@2.0.4: {}

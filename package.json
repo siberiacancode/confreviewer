@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && next build --webpack",
     "start": "next start -p 3000",
     "lint": "eslint . --fix",
     "lint-inspector": "npx @eslint/config-inspector@latest",
@@ -40,7 +40,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@scalar/api-reference-react": "^0.8.15",
     "@siberiacancode/fetches": "^1.13.2",
-    "@siberiacancode/reactuse": "^0.3.4",
+    "@siberiacancode/reactuse": "^0.3.5",
     "@tailwindcss/typography": "^0.5.19",
     "@vercel/analytics": "^1.6.1",
     "@vercel/og": "^0.8.6",
@@ -67,7 +67,7 @@
     "tailwind-merge": "^3.4.0",
     "unified": "^11.0.5",
     "vaul": "^1.1.2",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@siberiacancode/eslint": "^2.14.0",
