@@ -49,7 +49,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "iron-session": "^8.0.4",
-    "jsdom": "^27.3.0",
+    "jsdom": "27.0.0",
     "lexical": "^0.39.0",
     "lucide-react": "^0.562.0",
     "motion": "^12.23.26",
