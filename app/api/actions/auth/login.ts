@@ -16,7 +16,8 @@ const loginInputSchema = z.object({
     lastName: z.string().optional().describe('Last name'),
     photoUrl: z.string().optional().describe('Photo URL'),
     createdAt: z.number().describe('Created at')
-  })
+  }),
+  payload: z.any().describe('Telegram auth payload')
 });
 
 type LoginInput = z.infer<typeof loginInputSchema>;
@@ -28,7 +29,7 @@ export const login = async (input: LoginInput) => {
     return { success: false, error: validation.error.message };
   }
 
-  const { user } = validation.data;
+  const { user, payload } = validation.data;
 
   await prisma.user.upsert({
     where: { id: user.id },
@@ -37,13 +38,13 @@ export const login = async (input: LoginInput) => {
   });
 
   const cookieStore = await cookies();
-  const encrypted = encryptPayload(user);
+  const encrypted = encryptPayload({ ...user, payload });
 
   cookieStore.set(COOKIES.AUTH, encrypted, {
     httpOnly: true,
     sameSite: 'lax' as const,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
-    expires: new Date(user.createdAt + AUTH_COOKIE_EXPIRES)
+    expires: new Date(user.createdAt * 1000 + AUTH_COOKIE_EXPIRES)
   });
 };

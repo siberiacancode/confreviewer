@@ -10,7 +10,7 @@ export const useAuthModal = () => {
     telegram.login((payload) => {
       if (!payload) return toast.error('Failed to authenticate');
       const user = telegram.transformPayload(payload);
-      auth.login(user);
+      auth.login(user, payload);
     });
 
   return {

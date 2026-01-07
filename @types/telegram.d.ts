@@ -1,4 +1,4 @@
-export interface TelegramAuthPayload {
+interface TelegramAuthPayload {
   auth_date: number;
   first_name?: string;
   hash: string;

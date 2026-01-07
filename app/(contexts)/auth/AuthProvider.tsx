@@ -22,8 +22,8 @@ export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthPro
   const authModal = useDisclosure();
   const [user, setUser] = useState(initialUser);
 
-  const onLogin = async (user: AuthUser) => {
-    await login({ user });
+  const onLogin = async (user: AuthUser, payload: TelegramAuthPayload) => {
+    await login({ user, payload });
     setUser(user);
     authModal.close();
   };

@@ -23,7 +23,7 @@ export const encryptPayload = (payload: unknown) => {
   return Buffer.concat([iv, authTag, encrypted]).toString('base64');
 };
 
-export const decryptPayload = <Data = unknown>(raw: string) => {
+export const decryptPayload = <Data>(raw: string) => {
   const buffer = Buffer.from(raw, 'base64');
   if (buffer.length < IV_LENGTH + AUTH_TAG_LENGTH + 1) return;
 

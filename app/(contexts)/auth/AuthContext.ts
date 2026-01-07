@@ -5,7 +5,7 @@ import { createContext } from 'react';
 export interface AuthContextValue {
   metadata: AuthMetadata;
   user: AuthUser | undefined;
-  login: (user: AuthUser) => Promise<void> | void;
+  login: (user: AuthUser, payload: TelegramAuthPayload) => Promise<void> | void;
   logout: () => Promise<void> | void;
   setUser: (user: AuthUser | undefined) => void;
   authModal: {

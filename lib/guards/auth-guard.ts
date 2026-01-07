@@ -16,8 +16,10 @@ export const authGuard = async () => {
   const rawAuth = cookieStore.get(COOKIES.AUTH)?.value;
   if (!rawAuth) return;
 
-  const payload = decryptPayload<TelegramAuthPayload>(rawAuth);
-  if (!payload) return;
+  const decrypted = decryptPayload<{ payload: TelegramAuthPayload }>(rawAuth);
+  if (!decrypted) return;
+
+  const { payload } = decrypted;
 
   const expired = Date.now() > payload.auth_date * 1000 + AUTH_COOKIE_EXPIRES;
   if (expired) return;

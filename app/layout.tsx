@@ -39,13 +39,15 @@ interface RootLayoutProps {
 const getInitialAuth = async () => {
   const cookiesStore = await cookies();
   const raw = cookiesStore.get(COOKIES.AUTH)?.value ?? '';
-  const initialAuth = decryptPayload<TelegramAuthPayload>(raw);
+  const initialUser = decryptPayload<AuthUser>(raw);
+
+  if (initialUser) delete (initialUser as any).payload;
 
   const adminIds = JSON.parse(process.env.TELEGRAM_ADMIN_IDS ?? '[]') as number[];
-  const isAdmin = initialAuth ? adminIds.includes(initialAuth.id) : false;
+  const isAdmin = initialUser ? adminIds.includes(initialUser.id) : false;
 
   return {
-    initialUser: initialAuth ? telegram.transformPayload(initialAuth) : undefined,
+    initialUser,
     initialMetadata: {
       isAdmin
     }
