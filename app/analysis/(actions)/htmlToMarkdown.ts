@@ -9,7 +9,10 @@ export const htmlToMarkdown = async (html: string) => {
   const result = await unified()
     .use(rehypeParse, { fragment: true })
     .use(rehypeRemark)
-    .use(remarkStringify)
+    .use(remarkStringify, {
+      tightDefinitions: true,
+      wrap: false
+    })
     .process(html);
 
   return String(result).trim();

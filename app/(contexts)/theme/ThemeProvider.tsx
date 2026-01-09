@@ -1,21 +1,22 @@
-import { setCookie } from '@siberiacancode/reactuse';
+import { getCookie, setCookie } from '@siberiacancode/reactuse';
 import { useLayoutEffect, useMemo, useState } from 'react';
+
+import { COOKIES } from '@/app/(constants)';
 
 import type { Theme } from './ThemeContext';
 
 import { ThemeContext } from './ThemeContext';
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // const [theme, setTheme] = useState<Theme>(() => {
-  //   if (typeof window === 'undefined') return 'light';
-  //   return (getCookie('theme') as Theme) ?? 'light';
-  // });
-
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light';
+    // return (getCookie(COOKIES.THEME) as Theme) ?? 'light';
+    return 'light';
+  });
 
   useLayoutEffect(() => {
     const root = document.documentElement;
-    setCookie('theme', theme, {
+    setCookie(COOKIES.THEME, theme, {
       path: '/'
     });
     root.classList.remove('light', 'dark');

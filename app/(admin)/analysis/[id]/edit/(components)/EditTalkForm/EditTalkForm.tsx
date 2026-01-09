@@ -1,12 +1,9 @@
 'use client';
 
-import type { SerializedEditorState } from 'lexical';
-
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { ROUTES } from '@/app/(constants)';
-import { Editor } from '@/components/blocks/editor-00/editor';
 import {
   Avatar,
   AvatarFallback,
@@ -16,42 +13,12 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-  Input
+  Input,
+  Tiptap
 } from '@/components/ui';
 
 import { SpeakerTalkUpdateDialog } from '../SpeakerTalkUpdateDialog/SpeakerTalkUpdateDialog';
 import { useEditTalkForm } from './hooks';
-
-const serializeDescription = (description: string): SerializedEditorState =>
-  ({
-    root: {
-      children: [
-        {
-          children: [
-            {
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: description,
-              type: 'text',
-              version: 1
-            }
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'paragraph',
-          version: 1
-        }
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      type: 'root',
-      version: 1
-    }
-  }) as unknown as SerializedEditorState;
 
 export const EditTalkForm = () => {
   const { form, features, state, functions } = useEditTalkForm();
@@ -91,10 +58,10 @@ export const EditTalkForm = () => {
 
         <div className='flex flex-col gap-2'>
           <p className='text-md font-medium'>Описание</p>
-          <Editor
-            editorSerializedState={serializeDescription(form.getValues('description'))}
-            onSerializedChange={(value) =>
-              form.setValue('description', JSON.stringify(value), { shouldDirty: true })
+          <Tiptap
+            content={form.getValues('description')}
+            onUpdate={({ editor }) =>
+              form.setValue('description', editor.getMarkdown(), { shouldDirty: true })
             }
           />
         </div>

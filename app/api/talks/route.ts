@@ -10,14 +10,22 @@ import { REACTION_MAP, talkWithReactionsSchema } from '../types';
 
 export const talksQuerySchema = z.object({
   conferenceId: z.string().optional().describe('Conference ID filter'),
-  search: z.string().optional().describe('Search term for title, speaker, or description'),
-  sortBy: z
-    .enum(['createdAt', 'likes', 'wantsToWatch', 'title', 'speaker'])
+  search: z
+    .string()
     .optional()
-    .describe('Sort field'),
-  sortOrder: z.enum(['asc', 'desc']).optional().describe('Sort order'),
-  limit: z.coerce.number().min(1).max(100).optional().describe('Number of talks to return (1-100)'),
-  offset: z.coerce.number().min(0).optional().describe('Number of talks to skip')
+    .describe('Search term for title, speaker, or description')
+    .default(''),
+  popular: z.coerce.boolean().optional().describe('Popular filter').default(false),
+  demanded: z.coerce.boolean().optional().describe('Demanded filter').default(false),
+  sort: z.enum(['asc', 'desc']).optional().describe('Sort order').default('asc'),
+  limit: z.coerce
+    .number()
+    .min(1)
+    .max(100)
+    .optional()
+    .describe('Number of talks to return (1-100)')
+    .default(20),
+  offset: z.coerce.number().min(0).optional().describe('Number of talks to skip').default(0)
 });
 
 export const talksResponseSchema = z.object({
@@ -65,14 +73,7 @@ export const GET = async (
       );
     }
 
-    const {
-      conferenceId,
-      search,
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
-      limit = 20,
-      offset = 0
-    } = validation.data;
+    const { conferenceId, search, limit, offset } = validation.data;
 
     const where = {} as any;
 
@@ -83,20 +84,24 @@ export const GET = async (
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
-        { speaker: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
-        { company: { contains: search, mode: 'insensitive' } }
+        {
+          speakers: {
+            some: {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { company: { contains: search, mode: 'insensitive' } }
+              ]
+            }
+          }
+        }
       ];
     }
-
-    const orderBy: any = {};
-    orderBy[sortBy] = sortOrder;
 
     const total = await prisma.talk.count({ where });
 
     const talks = await prisma.talk.findMany({
       where,
-      orderBy,
       take: limit,
       skip: offset,
       include: { speakers: true }

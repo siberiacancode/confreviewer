@@ -45,7 +45,6 @@ export const actionTalk = async (
   if (!validation.success) {
     return { success: false, error: validation.error.message };
   }
-  console.log('validation', validation);
 
   const { value, talkId, type } = validation.data;
 

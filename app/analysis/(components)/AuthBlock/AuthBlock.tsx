@@ -29,8 +29,6 @@ export const AuthBlock = () => {
     );
   }
 
-  console.log('auth', auth.user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -16,4 +16,5 @@ export * from './input';
 export * from './shine-border';
 export * from './skeleton';
 export * from './switch';
+export * from './tiptap';
 export * from './tooltip';

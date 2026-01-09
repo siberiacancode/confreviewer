@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 
-import { ExternalLinkIcon, EyeIcon, FileTextIcon, HeartIcon, PencilIcon } from 'lucide-react';
+import { ExternalLinkIcon, EyeIcon, FileTextIcon, HeartIcon, StarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import z from 'zod';
 
 import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 import type { TalksResponse } from '@/app/api/talks/route';
@@ -20,10 +21,25 @@ import {
   ButtonGroup
 } from '@/components/ui';
 
+import { ConferenceFeedFilters } from './(components)/ConferenceFeedFilters/ConferenceFeedFilters';
 import { TalkItem } from './(components)/TalkItem/TalkItem';
 
+interface ConferenceFeedParams {
+  id: string;
+}
+
+const conferenceFeedSearchParamsSchema = z.object({
+  search: z.string().optional().default(''),
+  popular: z.boolean().optional().default(false),
+  demanded: z.boolean().optional().default(false),
+  sort: z.enum(['asc', 'desc']).optional().default('asc')
+});
+
+export type ConferenceFeedSearchParams = z.infer<typeof conferenceFeedSearchParamsSchema>;
+
 interface ConferencePageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<ConferenceFeedParams>;
+  searchParams?: Promise<ConferenceFeedSearchParams>;
 }
 
 export const generateMetadata = async ({ params }: ConferencePageProps): Promise<Metadata> => {
@@ -38,15 +54,27 @@ export const generateMetadata = async ({ params }: ConferencePageProps): Promise
   };
 };
 
-const ConferencePage = async ({ params }: ConferencePageProps) => {
+const ConferencePage = async ({ params, searchParams }: ConferencePageProps) => {
   const { id } = await params;
+
   const conferenceResponse = await api.get<ConferenceResponse>(`/conferences/${id}`);
 
   if (!conferenceResponse.data) notFound();
 
   const { conference } = conferenceResponse.data;
 
-  const talksResponse = await api.get<TalksResponse>(`/talks?conferenceId=${id}`);
+  const queryParams = await searchParams;
+  const validatedParams = conferenceFeedSearchParamsSchema.safeParse(queryParams);
+
+  const talksQuery = {
+    conferenceId: id,
+    search: validatedParams.data!.search,
+    popular: validatedParams.data!.popular,
+    demanded: validatedParams.data!.demanded,
+    sortBy: validatedParams.data!.sort
+  };
+
+  const talksResponse = await api.get<TalksResponse>('/talks', { query: talksQuery });
   const talks = talksResponse.data.talks;
 
   const totalLikes = talks.reduce((acc, talk) => acc + talk.likes, 0);
@@ -68,57 +96,64 @@ const ConferencePage = async ({ params }: ConferencePageProps) => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='flex items-start justify-between gap-6'>
-        <div className='flex items-start gap-4'>
-          {conference.logo && (
-            <div className='bg-muted flex size-16 items-center justify-center overflow-hidden rounded-lg p-3'>
-              <img
-                alt={conference.name}
-                className='size-full object-contain'
-                src={conference.logo}
-              />
-            </div>
-          )}
-
-          <div className='flex-1'>
-            <h1 className='text-3xl font-semibold'>{conference.name}</h1>
-            {conference.description && (
-              <p className='text-muted-foreground mt-2'>{conference.description}</p>
-            )}
-            <div className='mt-3 flex items-center gap-3'>
-              {!!totalLikes && (
-                <div className='flex items-center gap-1 text-sm font-medium text-pink-500 dark:text-pink-400'>
-                  <HeartIcon aria-label='Лайки' className='size-4' />
-                  {totalLikes}
-                </div>
-              )}
-              {!!totalWantsToWatch && (
-                <div className='flex items-center gap-1 text-sm font-medium text-blue-500 dark:text-blue-400'>
-                  <EyeIcon aria-label='Просмотры' className='size-4' />
-                  {totalWantsToWatch}
-                </div>
-              )}
-              <div className='flex items-center gap-1 text-sm font-medium text-gray-500 dark:text-gray-400'>
-                <FileTextIcon aria-label='Доклады' className='size-4' />
-                {talks.length}
+      <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-6'>
+          <div className='flex items-start justify-between gap-4'>
+            {conference.logo && (
+              <div className='bg-muted flex size-16 items-center justify-center overflow-hidden rounded-lg p-3'>
+                <img
+                  alt={conference.name}
+                  className='size-full object-contain'
+                  src={conference.logo}
+                />
               </div>
+            )}
+
+            <ButtonGroup>
+              <Button asChild size='sm' title='Опрос' variant='secondary'>
+                <Link href={ROUTES.CONFERENCE_FORM(conference.id)} target='_blank'>
+                  <StarIcon className='size-4' />
+                  Опрос
+                </Link>
+              </Button>
+              <Button asChild size='icon' title='Перейти к докладам' variant='secondary'>
+                <a href={conference.url} rel='noopener noreferrer' target='_blank'>
+                  <ExternalLinkIcon aria-label='Перейти к докладам' className='size-4' />
+                </a>
+              </Button>
+            </ButtonGroup>
+          </div>
+
+          <div className='flex flex-1 gap-4'>
+            <div className='flex flex-col gap-2'>
+              <h1 className='text-4xl font-semibold'>{conference.name}</h1>
+              {conference.description && (
+                <p className='text-muted-foreground'>{conference.description}</p>
+              )}
             </div>
           </div>
-        </div>
 
-        <ButtonGroup>
-          <Button asChild size='sm' title='Опрос' variant='secondary'>
-            <Link href={ROUTES.CONFERENCE_FORM(conference.id)} target='_blank'>
-              <PencilIcon className='size-4' />
-              Опрос
-            </Link>
-          </Button>
-          <Button asChild size='icon' title='Перейти к докладам' variant='secondary'>
-            <a href={conference.url} rel='noopener noreferrer' target='_blank'>
-              <ExternalLinkIcon aria-label='Перейти к докладам' className='size-4' />
-            </a>
-          </Button>
-        </ButtonGroup>
+          <div className='flex flex-wrap items-center gap-2'>
+            {!!totalLikes && (
+              <div className='flex items-center gap-2 rounded-full bg-pink-100 px-3 py-1.5 text-sm text-pink-800 dark:bg-pink-500/15 dark:text-pink-100'>
+                <HeartIcon aria-label='Лайки' className='size-4' />
+                <span className='font-semibold'>{totalLikes}</span>
+              </div>
+            )}
+            {!!totalWantsToWatch && (
+              <div className='flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1.5 text-sm text-blue-800 dark:bg-blue-500/15 dark:text-blue-100'>
+                <EyeIcon aria-label='Просмотры' className='size-4' />
+                <span className='font-semibold'>{totalWantsToWatch}</span>
+              </div>
+            )}
+            <div className='flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-800 dark:bg-slate-500/15 dark:text-slate-100'>
+              <FileTextIcon aria-label='Доклады' className='size-4' />
+              <span className='font-semibold'>{talks.length}</span>
+            </div>
+
+            <ConferenceFeedFilters />
+          </div>
+        </div>
       </div>
 
       <ul className='mb-10 flex flex-col gap-6'>

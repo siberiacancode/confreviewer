@@ -1,6 +1,9 @@
+import Link from 'next/link';
+
 import type { ConferencesResponse } from '@/app/api/conferences/route';
 import type { Conference } from '@/app/api/types';
 
+import { ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 
 import { ConferencesFilters } from './(components)';
@@ -53,7 +56,7 @@ const ConferencesPage = async ({ searchParams }: ConferencesPageProps) => {
 
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         {filteredConferences.map((conference) => (
-          <a href={`/analysis/conferences/${conference.id}`} key={conference.id}>
+          <Link href={ROUTES.CONFERENCE_FEED(conference.id)} key={conference.id}>
             <div className='bg-card flex cursor-pointer flex-col gap-4 rounded-lg border p-4 transition-all hover:shadow-md'>
               {conference.logo && (
                 <div className='flex h-18 items-center justify-center overflow-hidden rounded-lg p-4'>
@@ -74,7 +77,7 @@ const ConferencesPage = async ({ searchParams }: ConferencesPageProps) => {
                 )}
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>

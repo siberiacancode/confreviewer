@@ -140,7 +140,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
 
             <Button
               className={cn(
-                'hover:blue-green-100 cursor-pointer rounded-full hover:text-green-600 dark:hover:bg-green-900/30 dark:hover:text-green-400'
+                'hover:blue-green-100 cursor-pointer rounded-full hover:bg-green-100 hover:text-green-600 dark:hover:bg-green-900/30 dark:hover:text-green-400'
               )}
               disabled={isPending}
               size='lg'

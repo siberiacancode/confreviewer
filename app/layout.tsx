@@ -5,14 +5,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { cookies } from 'next/headers';
 import process from 'node:process';
 
-import type { TelegramAuthPayload } from '@/lib/telegram';
-
 import { COOKIES } from '@/app/(constants)';
 import { Toaster } from '@/components/ui/sonner';
 import { decryptPayload } from '@/lib/secure';
 
-import { TelegramWidgetScript, ThemeScript } from './(components)';
-import { telegram } from './(contexts)/auth/telegram';
+import { BugReport, TelegramWidgetScript, ThemeScript } from './(components)';
 import { Provider } from './provider';
 
 import './globals.css';
@@ -67,6 +64,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <Provider auth={initialAuth}>{children}</Provider>
         {process.env.NODE_ENV === 'production' && <Analytics mode='production' />}
         <Toaster />
+        <BugReport />
       </body>
     </html>
   );
