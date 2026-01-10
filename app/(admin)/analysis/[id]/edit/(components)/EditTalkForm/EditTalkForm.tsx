@@ -75,11 +75,13 @@ export const EditTalkForm = () => {
                 type='button'
               >
                 <div className='bg-muted flex size-12 items-center justify-center overflow-hidden rounded-lg p-2'>
-                  <img
-                    alt={state.conference.name}
-                    className='size-full object-contain'
-                    src={state.conference.logo}
-                  />
+                  {state.conference.logo && (
+                    <img
+                      alt={state.conference.name}
+                      className='size-full object-contain'
+                      src={state.conference.logo}
+                    />
+                  )}
                 </div>
                 <div className='flex flex-col gap-1'>
                   <span className='font-semibold'>{state.conference.name}</span>
