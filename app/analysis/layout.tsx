@@ -4,6 +4,7 @@ import { LoaderIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { ROUTES } from '@/app/(constants)';
+import { IntlText } from '@/app/(contexts)/intl';
 import { GithubIcon, TelegramIcon, TwitchIcon, VkIcon, YoutubeIcon } from '@/components/icons';
 import { Button } from '@/components/ui';
 
@@ -34,7 +35,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
         <div className='flex flex-1 items-center justify-end gap-2'>
           <Button asChild className='text-sm' size='sm' variant='ghost'>
             <a href={COMMUNITY_URL} rel='noopener noreferrer' target='_blank'>
-              Community
+              <IntlText path='button.community' />
             </a>
           </Button>
           <ThemeButton />
@@ -104,7 +105,9 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
             <div>
               <Button asChild className='rounded-full' size='sm' variant='secondary'>
-                <a href='https://t.me/siberiacancodee'>Связаться</a>
+                <a href='https://t.me/siberiacancodee'>
+                  <IntlText path='button.contact' />
+                </a>
               </Button>
             </div>
           </div>

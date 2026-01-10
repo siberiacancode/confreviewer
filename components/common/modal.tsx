@@ -20,17 +20,17 @@ import {
 export interface ModalProps {
   children?: ReactNode;
   description?: ReactNode;
-  open: boolean;
+
   title?: ReactNode;
   onOpenChange: (open: boolean) => void;
 }
 
-export const Modal = ({ open, onOpenChange, title, description, children }: ModalProps) => {
+export const Modal = ({ onOpenChange, title, description, children }: ModalProps) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   if (isMobile) {
     return (
-      <Drawer onOpenChange={onOpenChange} open={open}>
+      <Drawer onOpenChange={onOpenChange} open>
         <DrawerContent>
           {(title || description) && (
             <DrawerHeader>
@@ -45,7 +45,7 @@ export const Modal = ({ open, onOpenChange, title, description, children }: Moda
   }
 
   return (
-    <Dialog onOpenChange={onOpenChange} open={open}>
+    <Dialog onOpenChange={onOpenChange} open>
       <DialogContent className='w-sm'>
         {(title || description) && (
           <DialogHeader>

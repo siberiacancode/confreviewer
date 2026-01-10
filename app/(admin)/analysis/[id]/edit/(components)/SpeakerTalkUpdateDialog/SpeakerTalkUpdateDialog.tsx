@@ -4,6 +4,7 @@ import type { DialogProps } from '@radix-ui/react-dialog';
 
 import type { TalkSpeaker } from '@/app/api/types';
 
+import { IntlText } from '@/app/(contexts)/intl';
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, Input } from '@/components/ui';
 
 import type { TalkUpdateFormValues } from './hooks';
@@ -83,11 +84,11 @@ export const SpeakerTalkUpdateDialog = (props: SpeakerTalkUpdateDialogProps) => 
                 variant='outline'
                 onClick={() => props.onDelete?.(props.speaker!.id)}
               >
-                Удалить
+                <IntlText path='button.delete' />
               </Button>
             )}
             <Button className='rounded-full' disabled={state.loading} type='submit'>
-              Сохранить
+              <IntlText path='button.save' />
             </Button>
           </div>
         </form>

@@ -22,10 +22,7 @@ export const BugReport = () => {
       </Button>
 
       {features.bugReportModal.opened && (
-        <BugReportModal
-          onOpenChange={features.bugReportModal.toggle}
-          open={features.bugReportModal.opened}
-        />
+        <BugReportModal onOpenChange={features.bugReportModal.toggle} />
       )}
     </>
   );

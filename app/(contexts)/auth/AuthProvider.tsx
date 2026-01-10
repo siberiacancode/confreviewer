@@ -48,7 +48,7 @@ export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthPro
   return (
     <AuthContext value={value}>
       {children}
-      <AuthModal />
+      {authModal.opened && <AuthModal />}
     </AuthContext>
   );
 };

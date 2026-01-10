@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { ROUTES } from '@/app/(constants)';
 import { useAuth } from '@/app/(contexts)/auth';
+import { IntlText } from '@/app/(contexts)/intl';
 import {
   Avatar,
   AvatarFallback,
@@ -24,7 +25,7 @@ export const AuthBlock = () => {
   if (!auth.user) {
     return (
       <Button className='rounded-full' size='sm' onClick={auth.authModal.open}>
-        Sign in
+        <IntlText path='button.signIn' />
       </Button>
     );
   }
@@ -60,21 +61,21 @@ export const AuthBlock = () => {
         <DropdownMenuItem asChild>
           <Link href={ROUTES.PROFILE}>
             <UserIcon className='size-4' />
-            Profile
+            <IntlText path='button.profile' />
           </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
           <Link href={ROUTES.PROFILE}>
             <StarIcon className='size-4' />
-            Favorites
+            <IntlText path='button.favorites' />
           </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={auth.logout}>
           <LogOutIcon className='size-4' />
-          Logout
+          <IntlText path='button.logout' />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

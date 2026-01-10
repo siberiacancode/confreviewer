@@ -4,6 +4,7 @@ import { ChevronLeftIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { ROUTES } from '@/app/(constants)';
+import { IntlText } from '@/app/(contexts)/intl';
 import {
   Avatar,
   AvatarFallback,
@@ -30,12 +31,12 @@ export const EditTalkForm = () => {
           <Button asChild className='rounded-full' variant='ghost'>
             <Link href={ROUTES.TALK(state.talk.id)} className='flex items-center gap-2 font-medium'>
               <ChevronLeftIcon className='size-4' />
-              Назад
+              <IntlText path='button.back' />
             </Link>
           </Button>
 
           <Button className='rounded-full' disabled={state.loading || !state.isDirty} type='submit'>
-            Сохранить изменения
+            <IntlText path='button.saveChanges' />
           </Button>
         </div>
 
@@ -67,6 +68,31 @@ export const EditTalkForm = () => {
         </div>
 
         <div className='flex justify-start gap-2'>
+          <ContextMenu modal={false}>
+            <ContextMenuTrigger asChild>
+              <button
+                className='bg-card hover:border-primary/50 flex items-center gap-3 rounded-full border p-4 text-left transition'
+                type='button'
+              >
+                <div className='bg-muted flex size-12 items-center justify-center overflow-hidden rounded-lg p-2'>
+                  <img
+                    alt={state.conference.name}
+                    className='size-full object-contain'
+                    src={state.conference.logo}
+                  />
+                </div>
+                <div className='flex flex-col gap-1'>
+                  <span className='font-semibold'>{state.conference.name}</span>
+                  {/* <span className='text-muted-foreground text-sm'>{state.conference.description}</span> */}
+                </div>
+              </button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem>
+                <IntlText path='button.edit' />
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
           {state.speakers.map((speaker) => (
             <ContextMenu key={speaker.id} modal={false}>
               <ContextMenuTrigger asChild>
@@ -87,13 +113,13 @@ export const EditTalkForm = () => {
               </ContextMenuTrigger>
               <ContextMenuContent>
                 <ContextMenuItem onClick={() => functions.onSpeakerEdit(speaker)}>
-                  Edit
+                  <IntlText path='button.edit' />
                 </ContextMenuItem>
                 <ContextMenuItem
                   className='text-destructive'
                   onClick={() => functions.onSpeakerDelete(speaker.id)}
                 >
-                  Delete
+                  <IntlText path='button.delete' />
                 </ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>

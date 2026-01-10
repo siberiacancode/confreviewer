@@ -14,13 +14,9 @@ export const useAuthModal = () => {
     });
 
   return {
-    state: {
-      opened: auth.authModal.opened
+    features: {
+      authModal: auth.authModal
     },
-    functions: {
-      onOpen: auth.authModal.open,
-      onClose: auth.authModal.close,
-      onLogin
-    }
+    functions: { onLogin }
   };
 };

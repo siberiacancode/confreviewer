@@ -13,6 +13,7 @@ import { BugReport, TelegramWidgetScript, ThemeScript } from './(components)';
 import { Provider } from './provider';
 
 import './globals.css';
+import { getDictionary } from './(contexts)/intl/helpers/getDictionary';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -51,8 +52,19 @@ const getInitialAuth = async () => {
   };
 };
 
+const getInitialIntl = async () => {
+  const locale = 'ru' as Locale;
+  const messages = await getDictionary(locale);
+
+  return {
+    locale,
+    messages
+  };
+};
+
 const RootLayout = async ({ children }: RootLayoutProps) => {
   const initialAuth = await getInitialAuth();
+  const initialIntl = await getInitialIntl();
 
   return (
     <html className='text-[20px]' lang='en'>
@@ -61,10 +73,12 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
         <TelegramWidgetScript />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Provider auth={initialAuth}>{children}</Provider>
-        {process.env.NODE_ENV === 'production' && <Analytics mode='production' />}
-        <Toaster />
-        <BugReport />
+        <Provider auth={initialAuth} intl={initialIntl}>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics mode='production' />}
+          <Toaster />
+          <BugReport />
+        </Provider>
       </body>
     </html>
   );

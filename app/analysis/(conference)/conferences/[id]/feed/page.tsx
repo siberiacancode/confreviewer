@@ -9,6 +9,7 @@ import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 import type { TalksResponse } from '@/app/api/talks/route';
 
 import { ROUTES } from '@/app/(constants)';
+import { IntlText } from '@/app/(contexts)/intl';
 import { api } from '@/app/api/instance';
 import {
   Breadcrumb,
@@ -113,7 +114,7 @@ const ConferencePage = async ({ params, searchParams }: ConferencePageProps) => 
               <Button asChild size='sm' title='Опрос' variant='secondary'>
                 <Link href={ROUTES.CONFERENCE_FORM(conference.id)} target='_blank'>
                   <StarIcon className='size-4' />
-                  Опрос
+                  <IntlText path='button.survey' />
                 </Link>
               </Button>
               <Button asChild size='icon' title='Перейти к докладам' variant='secondary'>

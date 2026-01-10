@@ -2,6 +2,7 @@ import { FlameIcon, StarIcon, TrendingUpIcon } from 'lucide-react';
 
 import type { ModalProps } from '@/components/common';
 
+import { IntlText } from '@/app/(contexts)/intl';
 import { Modal } from '@/components/common';
 import { Button, Input } from '@/components/ui';
 import { cn } from '@/lib/utils';
@@ -72,10 +73,10 @@ export const ConferenceFeedFiltersModal = (props: ConferenceFeedFiltersModalProp
               variant='outline'
               onClick={functions.onReset}
             >
-              Очистить
+              <IntlText path='button.clear' />
             </Button>
             <Button className='rounded-full' type='submit'>
-              Применить
+              <IntlText path='button.apply' />
             </Button>
           </div>
         </div>

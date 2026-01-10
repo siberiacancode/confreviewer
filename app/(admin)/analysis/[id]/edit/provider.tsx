@@ -2,13 +2,17 @@
 
 import type { ComponentProps, ReactNode } from 'react';
 
-import { TalkProvider } from '@/app/analysis/[id]/(contexts)/talk';
+import { ConferenceProvider } from './(contexts)/conference';
+import { TalkProvider } from './(contexts)/talk';
 
 interface AdminEditProviderProps {
   children: ReactNode;
+  conference: Omit<ComponentProps<typeof ConferenceProvider>, 'children'>;
   talk: Omit<ComponentProps<typeof TalkProvider>, 'children'>;
 }
 
-export const AdminEditProvider = ({ children, talk }: AdminEditProviderProps) => (
-  <TalkProvider {...talk}>{children}</TalkProvider>
+export const AdminEditProvider = ({ children, talk, conference }: AdminEditProviderProps) => (
+  <TalkProvider {...talk}>
+    <ConferenceProvider {...conference}>{children}</ConferenceProvider>
+  </TalkProvider>
 );

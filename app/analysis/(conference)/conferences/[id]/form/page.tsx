@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import type { ConferenceResponse } from '@/app/api/conferences/[id]/route';
 import type { TalksResponse } from '@/app/api/talks/route';
 
-import { ROUTES } from '@/app/(constants)';
+import { COOKIES, ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 import {
   Breadcrumb,
@@ -30,6 +30,11 @@ interface ConferenceFormPageProps {
   params: Promise<{ id: string }>;
 }
 
+const getInitialMode = async () => {
+  const cookiesStore = await cookies();
+  return (cookiesStore.get(COOKIES.CONFERENCE_FORM_MODE)?.value ?? 'feed') as ConferenceFormMode;
+};
+
 const ConferenceFormPage = async ({ params }: ConferenceFormPageProps) => {
   const { id } = await params;
   const conferenceResponse = await api.get<ConferenceResponse>(`/conferences/${id}`);
@@ -41,8 +46,7 @@ const ConferenceFormPage = async ({ params }: ConferenceFormPageProps) => {
   const talksResponse = await api.get<TalksResponse>(`/talks?conferenceId=${id}`);
   const talks = talksResponse.data.talks;
 
-  const initialMode = ((await cookies()).get('conferenceFormMode')?.value ??
-    'feed') as ConferenceFormMode;
+  const initialMode = await getInitialMode();
 
   return (
     <ConferenceFormProvider conferenceForm={{ initialMode }}>

@@ -9,6 +9,7 @@ import type { TalkWithReactions } from '@/app/api/types';
 
 import { ROUTES } from '@/app/(constants)';
 import { useAuth } from '@/app/(contexts)/auth';
+import { IntlText } from '@/app/(contexts)/intl';
 import { actionTalk } from '@/app/analysis/(actions)/actionTalk';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
@@ -55,7 +56,9 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
           <h2 className='text-2xl font-semibold'>Спасибо, что заполнили опрос</h2>
 
           <Button asChild className='rounded-full'>
-            <Link href={ROUTES.CONFERENCE_FEED(conferenceId)}>Вернуться</Link>
+            <Link href={ROUTES.CONFERENCE_FEED(conferenceId)}>
+              <IntlText path='button.return' />
+            </Link>
           </Button>
         </div>
       </div>
@@ -124,7 +127,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
               size='lg'
               onClick={() => onAnswer('likes')}
             >
-              <HeartIcon className='size-4!' /> Нравится
+              <HeartIcon className='size-4!' /> <IntlText path='button.like' />
             </Button>
 
             <Button
@@ -135,7 +138,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
               size='lg'
               onClick={() => onAnswer('wantsToWatch')}
             >
-              <EyeIcon className='size-4!' /> Хочу посмотреть
+              <EyeIcon className='size-4!' /> <IntlText path='button.wantToWatch' />
             </Button>
 
             <Button
@@ -146,7 +149,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
               size='lg'
               onClick={() => onAnswer('skip')}
             >
-              Пропустить <ChevronRightIcon className='size-4!' />
+              <IntlText path='button.skip' /> <ChevronRightIcon className='size-4!' />
             </Button>
           </div>
         </div>

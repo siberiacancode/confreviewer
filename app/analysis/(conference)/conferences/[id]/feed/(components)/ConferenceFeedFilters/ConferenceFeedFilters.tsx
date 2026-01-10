@@ -2,6 +2,7 @@
 
 import { SlidersHorizontalIcon } from 'lucide-react';
 
+import { IntlText } from '@/app/(contexts)/intl';
 import { Button } from '@/components/ui';
 
 import { ConferenceFeedFiltersModal } from './components/ConferenceFeedFiltersModal/ConferenceFeedFiltersModal';
@@ -15,7 +16,7 @@ export const ConferenceFeedFilters = () => {
       <div className='relative inline-block'>
         <Button className='rounded-full' variant='secondary' onClick={features.filtersModal.open}>
           <SlidersHorizontalIcon className='size-4' />
-          Фильтры
+          <IntlText path='button.filters' />
         </Button>
 
         {state.filtered && (
@@ -27,10 +28,7 @@ export const ConferenceFeedFilters = () => {
       </div>
 
       {features.filtersModal.opened && (
-        <ConferenceFeedFiltersModal
-          onOpenChange={features.filtersModal.toggle}
-          open={features.filtersModal.opened}
-        />
+        <ConferenceFeedFiltersModal onOpenChange={features.filtersModal.toggle} />
       )}
     </>
   );

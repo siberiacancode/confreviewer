@@ -9,20 +9,26 @@ import { z } from 'zod';
 import type { TalkSpeaker } from '@/app/api/types';
 
 import { updateTalk } from '@/app/(admin)/(actions)/updateTalk';
-import { useTalk } from '@/app/analysis/[id]/(contexts)';
 
 import type { TalkUpdateFormValues } from '../../SpeakerTalkUpdateDialog/hooks';
 
+import { useConference } from '../../../(contexts)/conference';
+import { useTalk } from '../../../(contexts)/talk';
+
 const editTalkFormSchema = z.object({
-  title: z.string().describe('Talk title'),
-  description: z.string().describe('Talk description')
+  title: z.string(),
+  description: z.string()
 });
 
 export type EditTalkFormValues = z.infer<typeof editTalkFormSchema>;
 
 export const useEditTalkForm = () => {
   const router = useRouter();
-  const { talk } = useTalk();
+  const talkContext = useTalk();
+  const conferenceContext = useConference();
+
+  const talk = talkContext.talk;
+  const conference = conferenceContext.conference;
 
   const [speakers, setSpeakers] = useState<TalkSpeaker[]>(talk.speakers);
   const [selectedSpeaker, setSelectedSpeaker] = useState<TalkSpeaker>();
@@ -97,6 +103,7 @@ export const useEditTalkForm = () => {
       loading: isPending,
       speakers,
       talk,
+      conference,
       selectedSpeaker
     },
     functions: {

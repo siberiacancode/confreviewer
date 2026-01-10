@@ -1,5 +1,6 @@
 'use client';
 
+import { IntlText } from '@/app/(contexts)/intl';
 import { Modal } from '@/components/common';
 import { TelegramIcon } from '@/components/icons';
 import { Button } from '@/components/ui';
@@ -7,19 +8,18 @@ import { Button } from '@/components/ui';
 import { useAuthModal } from './hooks';
 
 export const AuthModal = () => {
-  const { state, functions } = useAuthModal();
+  const { features, functions } = useAuthModal();
 
   return (
     <Modal
       title='Sign in'
       description='Authentication via Telegram'
-      onOpenChange={functions.onClose}
-      open={state.opened}
+      onOpenChange={features.authModal.close}
     >
       <div className='flex flex-col gap-3'>
         <Button className='rounded-full' size='lg' variant='secondary' onClick={functions.onLogin}>
           <TelegramIcon className='size-5' />
-          <span>Sign in via Telegram</span>
+          <IntlText path='button.signInViaTelegram' />
         </Button>
       </div>
     </Modal>

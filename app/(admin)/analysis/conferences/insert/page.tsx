@@ -5,6 +5,7 @@ import type { ChangeEvent } from 'react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
+import { IntlText } from '@/app/(contexts)/intl';
 import { insertConference } from '@/app/api/actions';
 import {
   Button,
@@ -99,7 +100,7 @@ const AdminInsertConferencePage = () => {
             />
             {fileName && <span className='text-muted-foreground text-sm'>{fileName}</span>}
             <Button disabled={isPending} type='button' onClick={handleUpload}>
-              {isPending ? 'Загружаем...' : 'Загрузить'}
+              <IntlText path='button.upload' />
             </Button>
           </div>
 

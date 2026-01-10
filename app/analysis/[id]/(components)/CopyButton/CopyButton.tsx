@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { ROUTES } from '@/app/(constants)';
 import { useAuth } from '@/app/(contexts)/auth';
+import { IntlText } from '@/app/(contexts)/intl';
 import {
   Button,
   ButtonGroup,
@@ -37,12 +38,12 @@ export const CopyButton = () => {
         {copied ? (
           <>
             <CheckIcon className='size-4' />
-            Copied
+            <IntlText path='button.copied' />
           </>
         ) : (
           <>
             <CopyIcon className='size-4' />
-            Copy
+            <IntlText path='button.copy' />
           </>
         )}
       </Button>
@@ -56,11 +57,13 @@ export const CopyButton = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={onGetOgImage}>Get og image</DropdownMenuItem>
+          <DropdownMenuItem onClick={onGetOgImage}>
+            <IntlText path='button.getOgImage' />
+          </DropdownMenuItem>
           {authContext.metadata.isAdmin && (
             <DropdownMenuItem asChild>
               <Link href={ROUTES.ADMIN.EDIT_TALK(talk.id)} target='_blank'>
-                Edit talk
+                <IntlText path='button.editTalk' />
               </Link>
             </DropdownMenuItem>
           )}
