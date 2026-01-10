@@ -10,10 +10,10 @@ import { Toaster } from '@/components/ui/sonner';
 import { decryptPayload } from '@/lib/secure';
 
 import { BugReport, TelegramWidgetScript, ThemeScript } from './(components)';
+import { getDictionary } from './(contexts)/intl/helpers/getDictionary';
 import { Provider } from './provider';
 
 import './globals.css';
-import { getDictionary } from './(contexts)/intl/helpers/getDictionary';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

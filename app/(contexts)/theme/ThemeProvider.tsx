@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from '@siberiacancode/reactuse';
+import { setCookie } from '@siberiacancode/reactuse';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { COOKIES } from '@/app/(constants)';

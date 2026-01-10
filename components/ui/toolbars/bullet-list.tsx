@@ -3,28 +3,29 @@
 import { List } from 'lucide-react';
 import React from 'react';
 
-import { Button, type ButtonProps } from '@/components/ui/button';
+import type {ButtonProps} from '@/components/ui/button';
+
+import { Button  } from '@/components/ui/button';
+import { useToolbar } from '@/components/ui/toolbars/toolbar-provider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { useToolbar } from '@/components/ui/toolbars/toolbar-provider';
 
-const BulletListToolbar = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, onClick, children, ...props }, ref) => {
+const BulletListToolbar = ({ ref, className, onClick, children, ...props }: ButtonProps & { ref?: React.RefObject<HTMLButtonElement | null> }) => {
     const { editor } = useToolbar();
 
     return (
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant='ghost'
-            size='icon'
+            ref={ref}
             className={cn('h-8 w-8', editor?.isActive('bulletList') && 'bg-accent', className)}
+            disabled={!editor?.can().chain().focus().toggleBulletList().run()}
+            size='icon'
+            variant='ghost'
             onClick={(e) => {
               editor?.chain().focus().toggleBulletList().run();
               onClick?.(e);
             }}
-            disabled={!editor?.can().chain().focus().toggleBulletList().run()}
-            ref={ref}
             {...props}
           >
             {children || <List className='h-4 w-4' />}
@@ -35,8 +36,7 @@ const BulletListToolbar = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </TooltipContent>
       </Tooltip>
     );
-  }
-);
+  };
 
 BulletListToolbar.displayName = 'BulletListToolbar';
 
