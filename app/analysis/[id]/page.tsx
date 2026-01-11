@@ -1,17 +1,19 @@
 import type { Metadata } from 'next';
 
-import { ExternalLinkIcon } from 'lucide-react';
+import { ExternalLinkIcon, StarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
+import type { ReviewsResponse } from '@/app/api/talks/[id]/reviews/route';
 import type { TalkResponse } from '@/app/api/talks/[id]/route';
+import type { UserResponse } from '@/app/api/user/route';
 
 import { ROUTES } from '@/app/(constants)';
 import { api } from '@/app/api/instance';
 import { Button } from '@/components/ui';
 
-import { ActionPanel, CopyButton } from './(components)';
+import { ActionPanel, CopyButton, ReviewForm, ReviewList } from './(components)';
 import { AnalysisProvider } from './provider';
 
 interface AnalysisPageProps {
@@ -37,28 +39,41 @@ export const generateMetadata = async ({ params }: AnalysisPageProps): Promise<M
 const AnalysisPage = async ({ params }: AnalysisPageProps) => {
   const { id } = await params;
 
-  const talkResponse = await api.get<TalkResponse>(`/talks/${id}`);
+  const [userResponse, talkResponse, reviewsResponse] = await Promise.all([
+    api.get<UserResponse>(`/user`),
+    api.get<TalkResponse>(`/talks/${id}`),
+    api.get<ReviewsResponse>(`/talks/${id}/reviews`)
+  ]);
 
   if (!talkResponse.data) notFound();
 
   const { talk } = talkResponse.data;
+  const reviews = reviewsResponse.data?.reviews ?? [];
+  const user = userResponse.data?.user;
 
   const [firstSpeaker, ...otherSpeakers] = talk.speakers;
 
   return (
-    <AnalysisProvider talk={{ initialTalk: talk }}>
+    <AnalysisProvider reviews={{ initialReviews: reviews }} talk={{ initialTalk: talk }}>
       <div className='flex flex-col gap-2'>
         <div className='flex gap-2'>
           <div className='flex flex-col items-start justify-between gap-4'>
             <div className='flex w-full justify-between gap-2'>
               <div className='flex gap-3'>
-                {firstSpeaker.avatar && (
-                  <img
-                    alt={firstSpeaker.name}
-                    className='size-12 rounded-full object-cover'
-                    src={firstSpeaker.avatar}
-                  />
-                )}
+                <div className='relative flex size-12 items-center justify-center'>
+                  {firstSpeaker.avatar && (
+                    <img
+                      alt={firstSpeaker.name}
+                      className='size-12 rounded-full object-cover'
+                      src={firstSpeaker.avatar}
+                    />
+                  )}
+                  {!!talk.recommends && (
+                    <div className='border-background absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full border-2 bg-yellow-500'>
+                      <StarIcon className='size-3 fill-white text-white' />
+                    </div>
+                  )}
+                </div>
                 <div className='flex flex-col justify-between'>
                   <span>{firstSpeaker.name}</span>
                   <p className='text-muted-foreground text-sm'>{firstSpeaker.company}</p>
@@ -112,6 +127,12 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
               <img alt={`${talk.title} logo`} className='h-10 object-cover' src={talk.logo} />
             </Link>
           )}
+        </div>
+
+        <div className='mt-8 flex flex-col gap-6'>
+          {userResponse.data.metadata.isReviewer &&
+            !reviews.find((review) => review.userId === user?.id) && <ReviewForm />}
+          {!!reviews.length && <ReviewList reviews={reviews} />}
         </div>
       </div>
     </AnalysisProvider>

@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { adminGuard } from '@/lib/guards';
+import { authGuard } from '@/lib/guards';
 import { prisma } from '@/lib/prisma';
 
 const updateTalkSchema = z.object({
@@ -23,9 +23,9 @@ const updateTalkSchema = z.object({
 export type UpdateTalkInput = z.infer<typeof updateTalkSchema>;
 
 export const updateTalk = async (input: UpdateTalkInput) => {
-  const admin = await adminGuard();
+  const auth = await authGuard();
 
-  if (!admin) {
+  if (!auth || !auth.metadata.isAdmin) {
     return { success: false, error: 'Unauthorized' };
   }
 

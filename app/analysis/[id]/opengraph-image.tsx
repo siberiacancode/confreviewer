@@ -1,9 +1,13 @@
+import { cookies } from 'next/headers';
 import { ImageResponse } from 'next/og';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-import { prisma } from '@/lib/prisma';
+import type { TalkResponse } from '@/app/api/talks/[id]/route';
+
+import { COOKIES } from '@/app/(constants)';
+import { api } from '@/app/api/instance';
 
 export const alt = 'Conference Talk Analysis';
 export const size = {
@@ -12,197 +16,269 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-const loadGoogleFont = async (font: string, text: string) => {
-  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
-  const css = await (await fetch(url)).text();
-  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
-
-  if (resource) {
-    const response = await fetch(resource[1]);
-    if (response.status === 200) {
-      return await response.arrayBuffer();
-    }
-  }
-
-  throw new Error('failed to load font data');
+const loadFont = (fontPath: string): ArrayBuffer => {
+  const fullPath = path.join(process.cwd(), 'public', fontPath);
+  const fontBuffer = fs.readFileSync(fullPath);
+  return fontBuffer.buffer;
 };
 
-const splitTextIntoLines = (text: string, maxLines: number = 3): string[] => {
-  const words = text.split(' ');
-  const lines: string[] = [];
-
-  if (words.length <= maxLines) {
-    return words.map((word) => word);
+const colors = {
+  light: {
+    background: '#ffffff',
+    text: '#000000',
+    textSecondary: '#666666',
+    badgeBackground: '#d0d0d0',
+    badgeBorder: 'transparent',
+    starBackground: '#F1B700',
+    starBorder: '#ffffff',
+    starIcon: '#ffffff'
+  },
+  dark: {
+    background: '#0a0a0a',
+    text: '#ffffff',
+    textSecondary: '#999999',
+    badgeBackground: '#1a1a1a',
+    badgeBorder: '#333333',
+    starBackground: '#F1B700',
+    starBorder: '#0a0a0a',
+    starIcon: '#ffffff'
   }
+} as const;
 
-  const wordsPerLine = Math.ceil(words.length / maxLines);
-
-  for (let i = 0; i < maxLines; i++) {
-    const start = i * wordsPerLine;
-    const end = Math.min(start + wordsPerLine, words.length);
-    const line = words.slice(start, end).join(' ');
-    if (line) lines.push(line);
-  }
-
-  return lines;
-};
-
-const getFontSize = (lines: string[]): number => {
-  if (lines.length === 1) return 130;
-  if (lines.length === 2) return 100;
-  return 70;
-};
+interface AnalysisImageParams {
+  id: string;
+}
 
 interface AnalysisImageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<AnalysisImageParams>;
 }
 
 const AnalysisImage = async ({ params }: AnalysisImageProps) => {
   const { id } = await params;
 
-  const talk = await prisma.talk.findUnique({
-    where: { id },
-    include: { speakers: true }
-  });
+  const cookiesStore = await cookies();
+  const theme = (cookiesStore.get(COOKIES.THEME)?.value || 'light') as Theme;
 
-  if (!talk) {
+  const talkResponse = await api.get<TalkResponse>(`/talks/${id}`);
+
+  if (!talkResponse.data) {
     return new Response('Talk not found', { status: 404 });
   }
 
-  const titleLines = splitTextIntoLines(talk.title);
-  const fontSize = getFontSize(titleLines);
+  const { talk } = talkResponse.data;
 
-  const templatePath = path.join(process.cwd(), 'public', 'template.png');
-  const imageBuffer = fs.readFileSync(templatePath);
-  const backgroundImage = `url(data:image/png;base64,${imageBuffer.toString('base64')})`;
-  const speaker = talk.speakers[0];
+  const [firstSpeaker, ...otherSpeakers] = talk.speakers;
+
+  const themeColors = colors[theme];
 
   return new ImageResponse(
     <div
       style={{
-        height: '100%',
-        width: '100%',
+        fontFamily: 'Geist',
         display: 'flex',
-        position: 'relative'
+        flexDirection: 'column',
+        gap: 10,
+        padding: '60px 100px 20px',
+        height: '100%',
+        backgroundColor: themeColors.background,
+        color: themeColors.text
       }}
     >
       <div
         style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 25,
           height: '100%',
-          width: '100%',
-          display: 'flex',
-          backgroundImage,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'none'
+          justifyContent: 'space-between'
         }}
-      />
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <div style={{ position: 'relative', display: 'flex' }}>
+              <img
+                alt='first speaker avatar'
+                src={firstSpeaker.avatar!}
+                style={{ height: 80, borderRadius: 100 }}
+              />
 
-      {/* {talk.logo && (
-          <div
-            style={{
-              display: "flex",
-              position: "absolute",
-              padding: "0 130px",
-              top: "30px",
-              objectFit: "contain",
-              width: "100%",
-              justifyContent: "flex-end",
-            }}
-          >
-            <img
-              src={talk.logo}
-              alt="Conference logo"
-              style={{
-                height: "100px",
-                maxWidth: "150px",
-                objectFit: "contain",
-              }}
-            />
+              {talk.recommended && (
+                <div
+                  style={{
+                    display: 'flex',
+                    position: 'absolute',
+                    top: -1,
+                    right: -1,
+                    borderRadius: 100,
+                    backgroundColor: '#F1B700',
+                    border: '2px solid white',
+                    padding: 2
+                  }}
+                >
+                  <svg
+                    fill='currentColor'
+                    height='20'
+                    style={{ color: 'white' }}
+                    width='20'
+                    xmlns='http://www.w3.org/2000/svg'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    viewBox='0 0 24 24'
+                  >
+                    <path d='M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z' />
+                  </svg>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <span style={{ fontSize: '30px' }}>{firstSpeaker.name}</span>
+              <span style={{ fontSize: '20px', color: themeColors.textSecondary }}>
+                {firstSpeaker.company}
+              </span>
+            </div>
           </div>
-        )} */}
 
-      <div
-        style={{
-          position: 'absolute',
-          top: '170px',
-          padding: '0 130px',
-          width: '100%',
-          display: 'flex'
-        }}
-      >
-        <div
-          style={{
-            fontSize,
-            fontWeight: '700',
-            color: 'white',
-            lineHeight: 1.2
-          }}
-        >
-          {talk.title}
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          padding: '0 130px',
-          display: 'flex',
-          bottom: '40px',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px'
-          }}
-        >
-          {speaker.avatar && (
-            <img
-              style={{
-                height: '100px',
-                width: '100px',
-                border: '3px solid white',
-                borderRadius: '50%',
-                objectFit: 'cover'
-              }}
-              alt='Speaker'
-              src={speaker.avatar}
-            />
+          {!!otherSpeakers.length && (
+            <div style={{ display: 'flex', gap: 10, width: '100%', flexWrap: 'wrap' }}>
+              {otherSpeakers.map((speaker) => (
+                <div key={speaker.name} style={{ display: 'flex', gap: 10 }}>
+                  <img
+                    alt={speaker.name}
+                    src={speaker.avatar!}
+                    style={{ height: 30, borderRadius: 100 }}
+                  />
+                  <span style={{ fontSize: 23, color: themeColors.textSecondary }}>
+                    {speaker.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           )}
 
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column'
+              fontSize: '80px',
+              fontWeight: 'bold',
+              lineHeight: '1'
             }}
           >
-            {speaker.name && (
+            {talk.title}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 15
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                gap: 10,
+                alignItems: 'center',
+                padding: '15px 25px',
+                borderRadius: 100,
+                backgroundColor: themeColors.badgeBackground,
+                border: `1px solid ${themeColors.badgeBorder}`
+              }}
+            >
+              <img alt='conference logo' src={talk.logo!} style={{ height: 40 }} />
+            </div>
+
+            {!!talk.likes && (
               <div
                 style={{
-                  fontSize: 45,
-                  fontWeight: '600',
-                  color: 'white'
+                  display: 'flex',
+                  gap: 10,
+                  alignItems: 'center',
+                  padding: '15px 20px',
+                  borderRadius: 100,
+                  backgroundColor: themeColors.badgeBackground,
+                  border: `1px solid ${themeColors.badgeBorder}`
                 }}
               >
-                {speaker.name}
+                <svg
+                  fill='none'
+                  height='35'
+                  width='35'
+                  xmlns='http://www.w3.org/2000/svg'
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5' />
+                </svg>
+                <span style={{ fontSize: '30px' }}>{talk.likes}</span>
               </div>
             )}
-            {speaker.company && (
+            {!!talk.wantsToWatch && (
               <div
                 style={{
-                  fontSize: 35,
-                  color: 'white',
-                  opacity: 0.8
+                  display: 'flex',
+                  gap: 10,
+                  alignItems: 'center',
+                  padding: '15px 20px',
+                  borderRadius: 100,
+                  backgroundColor: themeColors.badgeBackground,
+                  border: `1px solid ${themeColors.badgeBorder}`
                 }}
               >
-                {speaker.company}
+                <svg
+                  fill='none'
+                  height='35'
+                  width='35'
+                  xmlns='http://www.w3.org/2000/svg'
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0' />
+                  <circle cx='12' cy='12' r='3' />
+                </svg>
+                <span style={{ fontSize: '25px' }}>{talk.wantsToWatch}</span>
               </div>
             )}
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'center',
+              gap: 5
+            }}
+          >
+            <svg
+              fill='none'
+              height='16'
+              width='16'
+              xmlns='http://www.w3.org/2000/svg'
+              stroke='#666'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              viewBox='0 0 24 24'
+            >
+              <path d='M12 2v4' />
+              <path d='m16.2 7.8 2.9-2.9' />
+              <path d='M18 12h4' />
+              <path d='m16.2 16.2 2.9 2.9' />
+              <path d='M12 18v4' />
+              <path d='m4.9 19.1 2.9-2.9' />
+              <path d='M2 12h4' />
+              <path d='m4.9 4.9 2.9 2.9' />
+            </svg>
+            <span style={{ fontSize: '25px', color: '#666' }}>confreviewer x siberiacancode</span>
           </div>
         </div>
       </div>
@@ -212,11 +288,15 @@ const AnalysisImage = async ({ params }: AnalysisImageProps) => {
       fonts: [
         {
           name: 'Geist',
-          data: await loadGoogleFont(
-            'Geist',
-            talk.title + (talk.speakers[0].name || '') + (talk.speakers[0].company || '')
-          ),
-          style: 'normal'
+          data: loadFont('fonts/Geist-Regular.ttf'),
+          style: 'normal',
+          weight: 400
+        },
+        {
+          name: 'Geist',
+          data: loadFont('fonts/Geist-SemiBold.ttf'),
+          style: 'normal',
+          weight: 600
         }
       ]
     }

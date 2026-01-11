@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 import type { TalkWithReactions } from '@/app/api/types';
 
-export type TalkActionType = 'likes' | 'wantsToWatch';
+export type TalkActionType = 'likes' | 'recommends' | 'wantsToWatch';
 
 export interface TalkContextValue {
   talk: TalkWithReactions;

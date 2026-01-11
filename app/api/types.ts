@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 export const REACTION_MAP = {
   likes: 'liked',
-  wantsToWatch: 'wantedToWatch'
+  wantsToWatch: 'wantedToWatch',
+  recommends: 'recommended'
 } as const;
 
 export const talkSpeakerSchema = z
@@ -39,18 +40,33 @@ export const talkSchema = z
   })
   .describe('Talk');
 
+export const talkReviewSchema = z
+  .object({
+    id: z.string().describe('ID'),
+    talkId: z.string().describe('Talk ID'),
+    userId: z.number().describe('User ID'),
+    comment: z.string().describe('Comment'),
+    createdAt: z.date().describe('Created at'),
+    updatedAt: z.date().describe('Updated at'),
+    user: userSchema.describe('User'),
+    recommended: z.boolean().describe('Is recommended')
+  })
+  .describe('TalkReview');
+
 export const talkWithReactionsSchema = talkSchema.extend({
   likes: z.number().describe('Likes count'),
   wantsToWatch: z.number().describe('Wants to watch count'),
+  recommends: z.number().describe('Recommended count'),
   liked: z.boolean().describe('Liked'),
-  wantedToWatch: z.boolean().describe('Wanted to watch')
+  wantedToWatch: z.boolean().describe('Wanted to watch'),
+  recommended: z.boolean().describe('Recommended')
 });
 
 export const talkReactionSchema = z
   .object({
     talkId: z.string().describe('Talk ID'),
     userId: z.number().describe('User ID'),
-    type: z.enum(['likes', 'wantsToWatch']).describe('Type'),
+    type: z.enum(['likes', 'wantsToWatch', 'recommends']).describe('Type'),
     createdAt: z.date().describe('Created at')
   })
   .describe('TalkReaction');
@@ -72,3 +88,4 @@ export type Talk = z.infer<typeof talkSchema>;
 export type TalkWithReactions = z.infer<typeof talkWithReactionsSchema>;
 export type Conference = z.infer<typeof conferenceSchema>;
 export type TalkSpeaker = z.infer<typeof talkSpeakerSchema>;
+export type TalkReview = z.infer<typeof talkReviewSchema>;

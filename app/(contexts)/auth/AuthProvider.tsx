@@ -16,7 +16,7 @@ interface AuthProviderProps {
   initialUser?: AuthUser;
 }
 
-const DEFAULT_METADATA: AuthMetadata = { isAdmin: false };
+const DEFAULT_METADATA: AuthMetadata = { isAdmin: false, isReviewer: false };
 
 export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthProviderProps) => {
   const authModal = useDisclosure();

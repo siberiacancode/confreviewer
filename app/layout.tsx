@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 
 import { Analytics } from '@vercel/analytics/next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { cookies } from 'next/headers';
 import process from 'node:process';
 
-import { COOKIES } from '@/app/(constants)';
+import type { UserResponse } from '@/app/api/user/route';
+
+import { api } from '@/app/api/instance';
 import { Toaster } from '@/components/ui/sonner';
-import { decryptPayload } from '@/lib/secure';
 
 import { BugReport, TelegramWidgetScript, ThemeScript } from './(components)';
 import { getDictionary } from './(contexts)/intl/helpers/getDictionary';
@@ -30,25 +30,28 @@ export const metadata: Metadata = {
   description: 'Analyze conferences automatically'
 };
 
+export const dynamic = 'force-dynamic';
+
 interface RootLayoutProps {
   children: React.ReactNode;
 }
 
 const getInitialAuth = async () => {
-  const cookiesStore = await cookies();
-  const raw = cookiesStore.get(COOKIES.AUTH)?.value ?? '';
-  const initialUser = decryptPayload<AuthUser>(raw);
+  const userResponse = await api.get<UserResponse>('/user');
 
-  if (initialUser) delete (initialUser as any).payload;
-
-  const adminIds = JSON.parse(process.env.TELEGRAM_ADMIN_IDS ?? '[]') as number[];
-  const isAdmin = initialUser ? adminIds.includes(initialUser.id) : false;
+  if (!userResponse.data) {
+    return {
+      initialUser: undefined,
+      initialMetadata: {
+        isAdmin: false,
+        isReviewer: false
+      }
+    };
+  }
 
   return {
-    initialUser,
-    initialMetadata: {
-      isAdmin
-    }
+    initialUser: userResponse.data.user,
+    initialMetadata: userResponse.data.metadata
   };
 };
 

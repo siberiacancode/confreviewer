@@ -1,3 +1,3 @@
-export { TalkContext } from './TalkContext';
-export { TalkProvider } from './TalkProvider';
-export { useTalk } from './useTalk';
+export * from './TalkContext';
+export * from './TalkProvider';
+export * from './useTalk';

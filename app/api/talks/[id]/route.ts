@@ -78,19 +78,23 @@ export const GET = async (
     const likesCount = reactions.find((reaction) => reaction.type === 'likes')?._count ?? 0;
     const wantsToWatchCount =
       reactions.find((reaction) => reaction.type === 'wantsToWatch')?._count ?? 0;
+    const recommendsCount =
+      reactions.find((reaction) => reaction.type === 'recommends')?._count ?? 0;
 
     const talkWithReactions = {
       ...talk,
       likes: likesCount,
       wantsToWatch: wantsToWatchCount,
+      recommends: recommendsCount,
       liked: false,
-      wantedToWatch: false
+      wantedToWatch: false,
+      recommended: false
     };
 
-    const authUser = await authGuard();
-    if (authUser) {
+    const auth = await authGuard();
+    if (auth) {
       const talkReactions = await prisma.talkReaction.findMany({
-        where: { talkId: id, userId: authUser.id }
+        where: { talkId: id, userId: auth.user.id }
       });
 
       talkReactions.forEach((reaction) => {

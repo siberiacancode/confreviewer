@@ -6,6 +6,8 @@ import { setCookie } from '@siberiacancode/reactuse';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
+import { COOKIES } from '@/app/(constants)';
+
 import type { ConferenceFormMode } from './ConferenceFormContext';
 
 import { ConferenceFormContext } from './ConferenceFormContext';
@@ -22,7 +24,7 @@ export const ConferenceFormProvider = ({ children, initialMode }: ConferenceForm
   const switchMode = () => {
     const newMode = mode === 'feed' ? 'list' : 'feed';
     setMode(newMode);
-    setCookie('conferenceFormMode', newMode);
+    setCookie(COOKIES.CONFERENCE_FORM_MODE, newMode);
     router.refresh();
   };
 

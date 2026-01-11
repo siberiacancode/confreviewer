@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma';
 const actionTalkParamsSchema = z.object({
   value: z.boolean().default(true),
   talkId: z.string().min(1, 'Talk ID is required'),
-  type: z.enum(['likes', 'wantsToWatch']).default('likes')
+  type: z.enum(['likes', 'wantsToWatch', 'recommends']).default('likes')
 });
 
 const actionTalkResponseSchema = z.object({
@@ -29,7 +29,7 @@ export type ActionTalkError = z.infer<typeof actionTalkErrorSchema>;
 
 export interface ActionTalkParams {
   talkId: string;
-  type: 'likes' | 'wantsToWatch';
+  type: 'likes' | 'recommends' | 'wantsToWatch';
   value: boolean;
 }
 
@@ -49,14 +49,32 @@ export const actionTalk = async (
   const { value, talkId, type } = validation.data;
 
   try {
-    const authUser = await authGuard();
+    const auth = await authGuard();
 
-    if (!authUser) {
+    if (!auth || !auth.metadata.isReviewer) {
       return { success: false, error: 'Unauthorized' };
     }
 
+    if (type === 'recommends') {
+      const review = await prisma.talkReview.findUnique({
+        where: {
+          talkId_userId: {
+            talkId,
+            userId: auth.user.id
+          }
+        }
+      });
+
+      if (!review) {
+        return {
+          success: false,
+          error: 'You can only recommend a talk after leaving a comment'
+        };
+      }
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: authUser.id }
+      where: { id: auth.user.id }
     });
 
     if (!user) {

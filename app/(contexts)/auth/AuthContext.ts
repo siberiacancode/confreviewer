@@ -18,7 +18,8 @@ export interface AuthContextValue {
 export const AuthContext = createContext<AuthContextValue>({
   user: undefined,
   metadata: {
-    isAdmin: false
+    isAdmin: false,
+    isReviewer: false
   },
   setUser: () => {},
   logout: () => {},

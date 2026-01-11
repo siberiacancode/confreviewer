@@ -68,10 +68,10 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
   const [firstSpeaker, ...otherSpeakers] = talk.speakers;
 
   return (
-    <div className='relative w-full pb-28'>
+    <div className='relative h-full w-full pb-28'>
       <div className='flex w-full flex-col items-start justify-between gap-6'>
         <div className='flex w-full gap-6'>
-          <div className='flex shrink-0 flex-col gap-2'>
+          <div className='flex flex-col gap-2'>
             {firstSpeaker.avatar && (
               <img
                 alt={firstSpeaker.name}
@@ -85,7 +85,7 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
             </div>
           </div>
 
-          <div className='min-w-0 flex-1'>
+          <div className='flex flex-1 flex-col gap-2'>
             <Link
               href={ROUTES.TALK(talk.id)}
               className='hover:opacity-70'
@@ -117,8 +117,8 @@ export const ConferenceFormFeed = ({ talks }: ConferenceFormFeedProps) => {
           </div>
         </div>
 
-        <div className='fixed inset-x-0 bottom-6 flex justify-center'>
-          <div className='bg-background/90 text-foreground border-border flex items-center gap-2 rounded-full border px-4 py-3 shadow-lg backdrop-blur'>
+        <div className='mt-30 flex w-full justify-center'>
+          <div className='bg-background/90 text-foreground border-border flex items-center justify-center gap-2 rounded-full border px-4 py-3 shadow-sm backdrop-blur'>
             <Button
               className={cn(
                 'cursor-pointer rounded-full hover:bg-pink-100 hover:text-pink-600 dark:hover:bg-pink-900/30 dark:hover:text-pink-400'

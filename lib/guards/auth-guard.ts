@@ -28,5 +28,18 @@ export const authGuard = async () => {
   if (!valid) return;
 
   const user = toAuthUser(payload);
-  return user;
+
+  const adminIds = JSON.parse(process.env.TELEGRAM_ADMIN_IDS ?? '[]') as number[];
+  const reviewerIds = JSON.parse(process.env.TELEGRAM_REVIEWER_IDS ?? '[]') as number[];
+
+  const isAdmin = adminIds.includes(user.id);
+  const isReviewer = reviewerIds.includes(user.id);
+
+  return {
+    user,
+    metadata: {
+      isAdmin,
+      isReviewer
+    }
+  };
 };

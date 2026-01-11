@@ -15,6 +15,7 @@ export * from './dropzone';
 export * from './field';
 export * from './hyper-text';
 export * from './input';
+export * from './separator';
 export * from './shine-border';
 export * from './skeleton';
 export * from './switch';

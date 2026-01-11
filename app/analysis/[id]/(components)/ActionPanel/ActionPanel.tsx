@@ -1,13 +1,14 @@
 'use client';
 
 import { useCopy } from '@siberiacancode/reactuse';
-import { CheckIcon, EyeIcon, ForwardIcon, HeartIcon } from 'lucide-react';
+import { CheckIcon, EyeIcon, ForwardIcon, HeartIcon, StarIcon } from 'lucide-react';
 // import dynamic from 'next/dynamic';
 
 import { useAuth } from '@/app/(contexts)/auth';
 import { Badge } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
+import { useReview } from '../../(contexts)/review';
 import { useTalk } from '../../(contexts)/talk';
 
 // const Badge = dynamic(() => import('@/components/ui/badge').then((mod) => mod.Badge), {
@@ -18,32 +19,74 @@ import { useTalk } from '../../(contexts)/talk';
 export const ActionPanel = () => {
   const talkContext = useTalk();
   const authContext = useAuth();
+  const reviewContext = useReview();
 
   const talk = talkContext.talk!;
 
   const { copied, copy } = useCopy();
 
+  const isLiked = talk.liked;
+  const isWantsToWatch = talk.wantedToWatch;
+  const isRecommended = talk.recommended;
+
+  const isReviewer = authContext.metadata.isReviewer;
+  const userHasReview = reviewContext.reviews.some(
+    (review) => review.userId === authContext.user?.id
+  );
+
   const onCopyClick = () => copy(window.location.href);
 
-  const isLiked = talk.liked ?? false;
-  const isWantsToWatch = talk.wantedToWatch ?? false;
+  const onLike = () => {
+    if (!authContext.user) {
+      authContext.authModal.open();
+      return;
+    }
+
+    talkContext.actionTalk('likes', !isLiked);
+  };
+
+  const onWantToWatch = () => {
+    if (!authContext.user) {
+      authContext.authModal.open();
+      return;
+    }
+
+    talkContext.actionTalk('wantsToWatch', !isWantsToWatch);
+  };
+
+  const onRecommend = () => {
+    if (!authContext.user) {
+      authContext.authModal.open();
+      return;
+    }
+
+    talkContext.actionTalk('recommends', !isRecommended);
+  };
 
   return (
     <div className='flex items-center gap-2'>
+      {isReviewer && userHasReview && (
+        <Badge
+          className={cn(
+            isRecommended &&
+              'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400',
+            !userHasReview && 'cursor-not-allowed opacity-50',
+            'h-6.5 cursor-pointer px-3 py-1 hover:bg-yellow-100 hover:text-yellow-600 dark:hover:bg-yellow-900/30 dark:hover:text-yellow-400'
+          )}
+          variant='outline'
+          onClick={onRecommend}
+        >
+          <StarIcon className={cn('size-4!', isRecommended && 'fill-current')} />
+        </Badge>
+      )}
+
       <Badge
         className={cn(
           isLiked && 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400',
           'h-6.5 cursor-pointer px-3 py-1 hover:bg-pink-100 hover:text-pink-600 dark:hover:bg-pink-900/30 dark:hover:text-pink-400'
         )}
         variant='outline'
-        onClick={() => {
-          if (!authContext.user) {
-            authContext.authModal.open();
-            return;
-          }
-
-          talkContext.actionTalk('likes', !isLiked);
-        }}
+        onClick={onLike}
       >
         <HeartIcon className='size-4!' />
 
@@ -56,14 +99,7 @@ export const ActionPanel = () => {
           'h-6.5 cursor-pointer px-3 py-1 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'
         )}
         variant='outline'
-        onClick={() => {
-          if (!authContext.user) {
-            authContext.authModal.open();
-            return;
-          }
-
-          talkContext.actionTalk('wantsToWatch', !isWantsToWatch);
-        }}
+        onClick={onWantToWatch}
       >
         <EyeIcon className='size-4!' />
         {!!talk.wantsToWatch && <span className='text-medium'>{talk.wantsToWatch}</span>}

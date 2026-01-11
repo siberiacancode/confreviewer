@@ -9,4 +9,7 @@ interface AuthUser {
 
 interface AuthMetadata {
   isAdmin: boolean;
+  isReviewer: boolean;
 }
+
+type Theme = 'dark' | 'light';

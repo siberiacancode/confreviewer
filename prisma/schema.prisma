@@ -31,6 +31,7 @@ model Talk {
   conferenceId String
   reactions    TalkReaction[]
   speakers     TalkSpeaker[]
+  reviews      TalkReview[]
   conference   Conference     @relation(fields: [conferenceId], references: [id])
 
   @@unique([title, conferenceId])
@@ -56,6 +57,7 @@ model User {
   photoUrl  String?
   createdAt Int
   reactions TalkReaction[]
+  reviews   TalkReview[]
 
   @@map("users")
 }
@@ -76,4 +78,19 @@ model TalkReaction {
 enum ReactionType {
   likes
   wantsToWatch
+  recommends
+}
+
+model TalkReview {
+  id        String   @id @default(cuid())
+  talkId    String
+  userId    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  talk      Talk     @relation(fields: [talkId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([talkId, userId])
+  @@map("talk_reviews")
 }

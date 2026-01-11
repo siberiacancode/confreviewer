@@ -28,13 +28,13 @@ const AnalysisLoading = () => (
         </div>
 
         <div className='flex items-center gap-2'>
-          <Skeleton className='h-6.5 w-14 rounded-full' />
-          <Skeleton className='h-6.5 w-16 rounded-full' />
-          <Skeleton className='h-6.5 w-16 rounded-full' />
+          <Skeleton className='h-6.5 w-10.5 rounded-full' />
+          <Skeleton className='h-6.5 w-10.5 rounded-full' />
+          <Skeleton className='h-6.5 w-10.5 rounded-full' />
         </div>
 
         <div className='mt-6 flex w-full items-center justify-between gap-4'>
-          <Skeleton className='h-10 w-28' />
+          <Skeleton className='h-10 w-20' />
         </div>
       </div>
     </div>

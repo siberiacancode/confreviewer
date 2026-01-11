@@ -1,5 +1,7 @@
 import { Buffer } from 'node:buffer';
 
+import type { User } from '@/app/api/types';
+
 export interface TelegramAuthPayload {
   auth_date: number;
   first_name?: string;
@@ -80,11 +82,11 @@ export const checkTelegramAuthorization = async (
   };
 };
 
-export const toAuthUser = (payload: TelegramAuthPayload): AuthUser => ({
+export const toAuthUser = (payload: TelegramAuthPayload): User => ({
   id: payload.id,
   username: payload.username,
   firstName: payload.first_name,
   lastName: payload.last_name,
   photoUrl: payload.photo_url,
-  authDate: payload.auth_date
+  createdAt: payload.auth_date
 });

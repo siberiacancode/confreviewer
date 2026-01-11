@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { adminGuard } from '@/lib/guards';
+import { authGuard } from '@/lib/guards';
 import { prisma } from '@/lib/prisma';
 
 const speakerInputSchema = z.object({
@@ -35,8 +35,9 @@ const insertConferenceInputSchema = z.object({
 type InsertConferenceInput = z.infer<typeof insertConferenceInputSchema>;
 
 export const insertConference = async (input: InsertConferenceInput) => {
-  const admin = await adminGuard();
-  if (!admin) throw new Error('Unauthorized');
+  const auth = await authGuard();
+
+  if (!auth || !auth.metadata.isAdmin) throw new Error('Unauthorized');
 
   const validation = insertConferenceInputSchema.safeParse(input);
   if (!validation.success) {
