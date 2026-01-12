@@ -6,7 +6,7 @@ export const parseOntiko = async (url: string, html: string) => {
   const dom = new JSDOM(html);
   const doc = dom.window.document;
 
-  const titleElement = doc.querySelector('h2');
+  const titleElement = doc.querySelector('h1');
   const descriptionElement = doc.querySelector('.thesis__article .thesis__text');
 
   const speakerElements = doc.querySelectorAll('.thesis__item-main');

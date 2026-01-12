@@ -30,8 +30,6 @@ export const CopyButton = () => {
       `**${talk.title} - ${talk.speakers.map((speaker) => speaker.name).join(', ')}**\n\n${talk.url}\n\n${talk.description}\n`
     );
 
-  const onGetOgImage = () => window.open(`/analysis/${talk.id}/opengraph-image`, '_blank');
-
   return (
     <ButtonGroup>
       <Button size='sm' variant='secondary' onClick={onCopyClick}>
@@ -57,8 +55,14 @@ export const CopyButton = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={onGetOgImage}>
-            <IntlText path='button.getOgImage' />
+          <DropdownMenuItem>
+            <a
+              href={`/analysis/${talk.id}/opengraph-image`}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              <IntlText path='button.getOgImage' />
+            </a>
           </DropdownMenuItem>
           {authContext.metadata.isAdmin && (
             <DropdownMenuItem asChild>

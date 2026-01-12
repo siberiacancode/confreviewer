@@ -9,15 +9,17 @@ export const parseJugru = async (url: string, html: string) => {
   const titleElement = doc.querySelector('[class*="talkContent__heading"]');
   const descriptionElement = doc.querySelector('[class*="talkContent__description"]');
 
-  const speakerElements = doc.querySelectorAll('[class*="personList__card"]');
+  const [speakerListElements] = doc.querySelectorAll('[class*="personList"]');
+  const speakerElements = speakerListElements.querySelectorAll('[class*="personList__card"]');
   const speakers = Array.from(speakerElements).map((speakerElement) => {
     const nameElement = speakerElement.querySelector('[class*="personCard__name"]');
     const companyElement = speakerElement.querySelector('[class*="personCard__company"]');
     const avatarElement = speakerElement.querySelector('img[class*="avatar__image"]');
+
     return {
       name: nameElement!.textContent!.trim(),
-      company: companyElement!.textContent!.trim(),
-      avatar: avatarElement!.getAttribute('src')
+      avatar: avatarElement!.getAttribute('src'),
+      ...(companyElement && { company: companyElement.textContent!.trim() })
     };
   });
 

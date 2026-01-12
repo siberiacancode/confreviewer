@@ -41,7 +41,7 @@ model Talk {
 model TalkSpeaker {
   id      String  @id @default(cuid())
   name    String
-  company String
+  company String?
   avatar  String?
   talkId  String
   talk    Talk    @relation(fields: [talkId], references: [id])

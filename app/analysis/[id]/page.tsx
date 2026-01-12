@@ -76,7 +76,9 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
                 </div>
                 <div className='flex flex-col justify-between'>
                   <span>{firstSpeaker.name}</span>
-                  <p className='text-muted-foreground text-sm'>{firstSpeaker.company}</p>
+                  <p className='text-muted-foreground text-sm'>
+                    {firstSpeaker.company ?? 'нет компании'}
+                  </p>
                 </div>
               </div>
 

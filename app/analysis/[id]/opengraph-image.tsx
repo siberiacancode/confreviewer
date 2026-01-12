@@ -27,7 +27,7 @@ const colors = {
     background: '#ffffff',
     text: '#000000',
     textSecondary: '#666666',
-    badgeBackground: '#d0d0d0',
+    badgeBackground: '#f0f0f0',
     badgeBorder: 'transparent',
     starBackground: '#F1B700',
     starBorder: '#ffffff',
@@ -80,6 +80,7 @@ const AnalysisImage = async ({ params }: AnalysisImageProps) => {
         gap: 10,
         padding: '60px 100px 20px',
         height: '100%',
+        width: '100%',
         backgroundColor: themeColors.background,
         color: themeColors.text
       }}
