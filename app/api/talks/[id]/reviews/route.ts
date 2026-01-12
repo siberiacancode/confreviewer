@@ -56,7 +56,7 @@ export const GET = async (
     const auth = await authGuard();
 
     if (!auth || !auth.metadata.isReviewer) {
-      return NextResponse.json({ error: 'Unauthorized', success: false }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized', success: false });
     }
 
     const talk = await prisma.talk.findUnique({

@@ -41,7 +41,7 @@ export const GET = async (
     const authUser = await authGuard();
 
     if (!authUser) {
-      return NextResponse.json({ error: 'Unauthorized', success: false }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized', success: false });
     }
 
     return NextResponse.json({

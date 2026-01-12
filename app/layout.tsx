@@ -30,8 +30,6 @@ export const metadata: Metadata = {
   description: 'Analyze conferences automatically'
 };
 
-export const dynamic = 'force-dynamic';
-
 interface RootLayoutProps {
   children: React.ReactNode;
 }
