@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { talkReviewSchema } from '@/app/api/types';
-import { prisma } from '@/lib/prisma';
 import { authGuard } from '@/lib/guards';
+import { prisma } from '@/lib/prisma';
 
 export const reviewsParamsSchema = z.object({
   id: z.string().describe('Talk ID')

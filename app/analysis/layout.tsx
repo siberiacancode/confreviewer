@@ -3,14 +3,12 @@ import type { ReactNode } from 'react';
 import { LoaderIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { ROUTES } from '@/app/(constants)';
+import { EXTERNAL_LINKS, ROUTES } from '@/app/(constants)';
 import { IntlText } from '@/app/(contexts)/intl';
 import { GithubIcon, TelegramIcon, TwitchIcon, VkIcon, YoutubeIcon } from '@/components/icons';
 import { Button } from '@/components/ui';
 
 import { AuthBlock, SearchInput, ThemeButton } from './(components)';
-
-const COMMUNITY_URL = 'https://t.me/siberiacancodee';
 
 interface AnalysisLayoutProps {
   children: ReactNode;
@@ -34,7 +32,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
         <div className='flex flex-1 items-center justify-end gap-2'>
           <Button asChild className='text-sm' size='sm' variant='ghost'>
-            <a href={COMMUNITY_URL} rel='noopener noreferrer' target='_blank'>
+            <a href={EXTERNAL_LINKS.SOCIAL.TELEGRAM} rel='noopener noreferrer' target='_blank'>
               <IntlText path='button.community' />
             </a>
           </Button>
@@ -54,7 +52,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
             <div className='flex items-center gap-2'>
               <Button asChild className='rounded-full' size='icon' variant='outline'>
                 <a
-                  href='https://t.me/siberiacancodee'
+                  href={EXTERNAL_LINKS.SOCIAL.TELEGRAM}
                   aria-label='Telegram'
                   rel='noopener noreferrer'
                   target='_blank'
@@ -65,7 +63,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
               <Button asChild className='rounded-full' size='icon' variant='outline'>
                 <a
-                  href='https://www.youtube.com'
+                  href={EXTERNAL_LINKS.SOCIAL.YOUTUBE}
                   aria-label='YouTube'
                   rel='noopener noreferrer'
                   target='_blank'
@@ -75,14 +73,19 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
               </Button>
 
               <Button asChild className='rounded-full' size='icon' variant='outline'>
-                <a href='https://vk.com' aria-label='VK' rel='noopener noreferrer' target='_blank'>
+                <a
+                  href={EXTERNAL_LINKS.SOCIAL.VK}
+                  aria-label='VK'
+                  rel='noopener noreferrer'
+                  target='_blank'
+                >
                   <VkIcon />
                 </a>
               </Button>
 
               <Button asChild className='rounded-full' size='icon' variant='outline'>
                 <a
-                  href='https://github.com/siberiacancode'
+                  href={EXTERNAL_LINKS.SOCIAL.GITHUB}
                   aria-label='Github'
                   rel='noopener noreferrer'
                   target='_blank'
@@ -93,7 +96,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
               <Button asChild className='rounded-full' size='icon' variant='outline'>
                 <a
-                  href='https://twitch.tv/siberiacancode'
+                  href={EXTERNAL_LINKS.SOCIAL.TWITCH}
                   aria-label='Twitch'
                   rel='noopener noreferrer'
                   target='_blank'
@@ -105,7 +108,7 @@ const AnalysisLayout = ({ children }: AnalysisLayoutProps) => (
 
             <div>
               <Button asChild className='rounded-full' size='sm' variant='secondary'>
-                <a href='https://t.me/siberiacancodee'>
+                <a href={EXTERNAL_LINKS.SOCIAL.TELEGRAM}>
                   <IntlText path='button.contact' />
                 </a>
               </Button>

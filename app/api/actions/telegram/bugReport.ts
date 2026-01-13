@@ -3,6 +3,8 @@
 import process from 'node:process';
 import z from 'zod';
 
+import { EXTERNAL_LINKS } from '@/app/(constants)';
+
 const bugReportInputSchema = z.object({
   title: z.string().describe('Title'),
   description: z.string().describe('Description'),
@@ -20,7 +22,7 @@ export const bugReport = async (input: BugReportInput) => {
   console.error(validation.data);
   const { title, description, screenshot } = validation.data;
 
-  const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendPhoto`;
+  const url = `${EXTERNAL_LINKS.TELEGRAM.API_BASE}/bot${process.env.TELEGRAM_BOT_TOKEN}/sendPhoto`;
 
   const formData = new FormData();
   formData.append('chat_id', '441147044');

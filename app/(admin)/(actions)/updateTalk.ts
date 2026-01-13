@@ -31,7 +31,7 @@ export const updateTalk = async (input: UpdateTalkInput) => {
 
   const parsed = updateTalkSchema.safeParse(input);
   if (!parsed.success) {
-    return { success: false, error: 'Validation failed', details: parsed.error.flatten() };
+    return { success: false, error: 'Validation failed' };
   }
 
   const { id, title, description, speakers } = parsed.data;

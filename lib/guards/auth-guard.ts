@@ -5,6 +5,7 @@ import { AUTH_COOKIE_EXPIRES, COOKIES } from '@/app/(constants)';
 
 import type { TelegramAuthPayload } from '../telegram';
 
+import { prisma } from '../prisma';
 import { decryptPayload } from '../secure';
 import { checkTelegramAuthorization, toAuthUser } from '../telegram';
 
@@ -34,6 +35,14 @@ export const authGuard = async () => {
 
   const isAdmin = adminIds.includes(user.id);
   const isReviewer = reviewerIds.includes(user.id);
+
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: user.id
+    }
+  });
+
+  if (!userData) return;
 
   return {
     user,

@@ -1,5 +1,7 @@
 import { JSDOM } from 'jsdom';
 
+import { EXTERNAL_LINKS } from '@/app/(constants)';
+
 import { htmlToMarkdown } from '../../(actions)';
 
 export const parseMoscowjs = async (url: string, html: string) => {
@@ -49,7 +51,7 @@ export const parseMoscowjs = async (url: string, html: string) => {
   }
 
   const conferenceUrl = doc.querySelector('[class*="item__ItemMeta"]')!.querySelector('a')!.href;
-  const conferenceData = await fetch(`https://moscowjs.org${conferenceUrl}`);
+  const conferenceData = await fetch(`${EXTERNAL_LINKS.CONFERENCES.MOSCOWJS}${conferenceUrl}`);
   const conferenceHtml = await conferenceData.text();
   const conferenceDom = new JSDOM(conferenceHtml);
   const conferenceDoc = conferenceDom.window.document;

@@ -1,9 +1,13 @@
 import Script from 'next/script';
 
-const TELEGRAM_WIDGET_SRC = 'https://telegram.org/js/telegram-widget.js?22';
+import { EXTERNAL_LINKS } from '@/app/(constants)';
 
 export const TelegramWidgetScript = () => (
   <>
-    <Script id='telegram-widget-lib' src={TELEGRAM_WIDGET_SRC} strategy='beforeInteractive' />
+    <Script
+      id='telegram-widget-lib'
+      src={EXTERNAL_LINKS.TELEGRAM.WIDGET_SCRIPT}
+      strategy='beforeInteractive'
+    />
   </>
 );

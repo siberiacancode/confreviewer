@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 import type { SearchResponse } from '../api/search/route';
 
-import { ROUTES } from '../(constants)/routes';
+import { EXTERNAL_LINKS, ROUTES } from '../(constants)';
 import { api } from '../api/instance';
 
 interface MainLayoutProps {
@@ -86,7 +86,7 @@ const MainLayout = async ({ children }: MainLayoutProps) => {
           <span>
             made by{' '}
             <a
-              href='https://github.com/siberiacancode'
+              href={EXTERNAL_LINKS.SOCIAL.GITHUB}
               className='underline'
               rel='noopener noreferrer'
               target='_blank'
