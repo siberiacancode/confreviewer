@@ -10,7 +10,7 @@ export const talkSpeakerSchema = z
   .object({
     id: z.string().describe('ID'),
     name: z.string().describe('Name'),
-    company: z.string().describe('Company'),
+    company: z.string().nullable().optional().describe('Company'),
     avatar: z.string().nullable().optional().describe('Avatar')
   })
   .describe('TalkSpeaker');

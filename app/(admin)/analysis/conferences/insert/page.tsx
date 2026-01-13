@@ -18,8 +18,6 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
-
 const EXAMPLE_JSON = `{
   "conference": {
     "id": "techtrain_2025",

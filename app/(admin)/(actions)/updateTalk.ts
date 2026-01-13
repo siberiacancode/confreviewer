@@ -13,7 +13,7 @@ const updateTalkSchema = z.object({
     .array(
       z.object({
         name: z.string().min(1, 'Имя обязательно'),
-        company: z.string().min(1, 'Компания обязательна'),
+        company: z.string().nullable().optional(),
         avatar: z.string().nullable().optional().describe('Аватар')
       })
     )
