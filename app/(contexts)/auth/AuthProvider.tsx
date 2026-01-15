@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { useDisclosure } from '@siberiacancode/reactuse';
-import { useMemo, useState } from 'react';
+import { useDisclosure } from "@siberiacancode/reactuse";
+import { useMemo, useState } from "react";
 
-import { login, logout } from '@/app/api/actions';
+import { login, logout } from "@/app/api/actions";
 
-import { AuthContext } from './AuthContext';
-import { AuthModal } from './components';
+import { AuthContext } from "./AuthContext";
+import { AuthModal } from "./components";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -18,7 +18,11 @@ interface AuthProviderProps {
 
 const DEFAULT_METADATA: AuthMetadata = { isAdmin: false, isReviewer: false };
 
-export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthProviderProps) => {
+export const AuthProvider = ({
+  children,
+  initialUser,
+  initialMetadata,
+}: AuthProviderProps) => {
   const authModal = useDisclosure();
   const [user, setUser] = useState(initialUser);
 
@@ -33,14 +37,26 @@ export const AuthProvider = ({ children, initialUser, initialMetadata }: AuthPro
     setUser(undefined);
   };
 
+  const authCallback =
+    <Callback extends () => void>(callback: Callback) =>
+    async () => {
+      if (!user) {
+        authModal.open();
+        return;
+      }
+
+      return callback();
+    };
+
   const value = useMemo(
     () => ({
       user,
       metadata: { ...DEFAULT_METADATA, ...initialMetadata },
       authModal,
       setUser,
+      authCallback,
       logout: onLogout,
-      login: onLogin
+      login: onLogin,
     }),
     [user, authModal.opened]
   );

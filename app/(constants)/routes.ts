@@ -1,26 +1,28 @@
 export const ROUTES = {
-  HOME: '/',
-  ANALYSIS: '/analysis',
-  PROFILE: '/profile',
+  HOME: "/",
+  ANALYSIS: "/analysis",
+  PROFILE: "/profile",
   TALK: (id: string) => `/analysis/${id}`,
-  CONFERENCES: '/analysis/conferences',
+  TALK_OPENGRAPH_IMAGE: (id: string) => `/analysis/${id}/opengraph-image`,
+  CONFERENCES: "/analysis/conferences",
   CONFERENCE_FEED: (id: string) => `/analysis/conferences/${id}/feed`,
   CONFERENCE_FORM: (id: string) => `/analysis/conferences/${id}/form`,
   ADMIN: {
     EDIT_TALK: (id: string) => `/analysis/${id}/edit`,
-    INSERT_CONFERENCE: '/conferences/insert'
-  }
+    INSERT_CONFERENCE: "/conferences/insert",
+  },
 } as const;
 
-const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const ADMIN_ROUTE_REGEXPS = Object.values(ROUTES.ADMIN).map((route) => {
-  if (typeof route === 'string') {
+  if (typeof route === "string") {
     return new RegExp(`^${escapeRegex(route)}/?$`);
   }
 
-  const template = route(':id');
-  const pattern = escapeRegex(template).replace(escapeRegex(':id'), '[^/]+');
+  const template = route(":id");
+  const pattern = escapeRegex(template).replace(escapeRegex(":id"), "[^/]+");
   return new RegExp(`^${pattern}/?$`);
 });
 

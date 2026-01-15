@@ -1,24 +1,24 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
-import { talkReviewSchema } from '@/app/api/types';
-import { authGuard } from '@/lib/guards';
-import { prisma } from '@/lib/prisma';
+import { talkReviewSchema } from "@/app/api/types";
+import { authGuard } from "@/lib/guards";
+import { prisma } from "@/lib/prisma";
 
 export const reviewsParamsSchema = z.object({
-  id: z.string().describe('Talk ID')
+  id: z.string().describe("Talk ID"),
 });
 
 export const reviewsResponseSchema = z.object({
-  success: z.boolean().describe('Success'),
-  reviews: z.array(talkReviewSchema)
+  success: z.boolean().describe("Success"),
+  reviews: z.array(talkReviewSchema),
 });
 
 export const reviewsErrorSchema = z.object({
-  error: z.string().describe('Error'),
-  success: z.boolean().describe('Success')
+  error: z.string().describe("Error"),
+  success: z.boolean().describe("Success"),
 });
 
 export type ReviewsResponse = z.infer<typeof reviewsResponseSchema>;
@@ -46,28 +46,22 @@ export const GET = async (
     if (!validation.success) {
       return NextResponse.json(
         {
-          error: 'Invalid talk ID',
-          success: false
+          error: "Invalid talk ID",
+          success: false,
         },
         { status: 400 }
       );
     }
 
-    const auth = await authGuard();
-
-    if (!auth || !auth.metadata.isReviewer) {
-      return NextResponse.json({ error: 'Unauthorized', success: false });
-    }
-
     const talk = await prisma.talk.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!talk) {
       return NextResponse.json(
         {
-          error: 'Talk not found',
-          success: false
+          error: "Talk not found",
+          success: false,
         },
         { status: 404 }
       );
@@ -76,20 +70,22 @@ export const GET = async (
     const reviews = await prisma.talkReview.findMany({
       where: { talkId: id },
       include: { user: true },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
 
     const recommendedReactions = await prisma.talkReaction.findMany({
       where: {
         talkId: id,
-        type: 'recommends'
+        type: "recommends",
       },
       select: {
-        userId: true
-      }
+        userId: true,
+      },
     });
 
-    const recommendedUserIds = new Set(recommendedReactions.map((reaction) => reaction.userId));
+    const recommendedUserIds = new Set(
+      recommendedReactions.map((reaction) => reaction.userId)
+    );
 
     return NextResponse.json({
       success: true,
@@ -106,13 +102,16 @@ export const GET = async (
           firstName: review.user.firstName ?? undefined,
           lastName: review.user.lastName ?? undefined,
           photoUrl: review.user.photoUrl ?? undefined,
-          createdAt: review.user.createdAt
+          createdAt: review.user.createdAt,
         },
-        recommended: recommendedUserIds.has(review.userId)
-      }))
+        recommended: recommendedUserIds.has(review.userId),
+      })),
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Internal server error', success: false }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error", success: false },
+      { status: 500 }
+    );
   }
 };
