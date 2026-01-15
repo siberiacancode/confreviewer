@@ -25,5 +25,6 @@
   "button.upload": "Загрузить",
   "button.edit": "Редактировать",
   "button.editTalk": "Редактировать доклад",
-  "button.getOgImage": "Превью доклада"
+  "button.getOgImage": "Превью доклада",
+  "button.openConference": "Открыть конференцию"
 }
