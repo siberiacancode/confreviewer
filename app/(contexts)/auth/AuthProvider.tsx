@@ -39,7 +39,7 @@ export const AuthProvider = ({
 
   const authCallback =
     <Callback extends () => void>(callback: Callback) =>
-    async () => {
+    () => {
       if (!user) {
         authModal.open();
         return;
