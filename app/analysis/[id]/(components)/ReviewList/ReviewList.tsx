@@ -46,7 +46,9 @@ export const ReviewList = ({ reviews }: ReviewListProps) => {
               </div>
 
               <div className="flex flex-1 flex-col gap-2">
-                <p className="text-sm whitespace-pre-wrap">{review.comment}</p>
+                <p className="prose prose-sm dark:prose-invert whitespace-pre-wrap">
+                  {review.comment}
+                </p>
               </div>
 
               {isUserReview && (
