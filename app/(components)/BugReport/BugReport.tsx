@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { BugIcon } from 'lucide-react';
+import { BugIcon } from "lucide-react";
 
-import { Button } from '@/components/ui';
+import { Button } from "@/components/ui";
 
-import { BugReportModal } from './components/BugReportModal/BugReportModal';
-import { useBugReport } from './hooks';
+import { BugReportModal } from "./components";
+import { useBugReport } from "./hooks";
 
 export const BugReport = () => {
   const { features } = useBugReport();
@@ -13,12 +13,12 @@ export const BugReport = () => {
   return (
     <>
       <Button
-        className='fixed right-4 bottom-4 z-50 rounded-full'
-        size='icon'
-        variant='secondary'
+        className="fixed right-4 bottom-4 z-50 rounded-full"
+        size="icon"
+        variant="secondary"
         onClick={features.bugReportModal.open}
       >
-        <BugIcon className='size-4' />
+        <BugIcon className="size-4" />
       </Button>
 
       {features.bugReportModal.opened && (
